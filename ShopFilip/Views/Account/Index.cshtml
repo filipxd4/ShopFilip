@@ -1,0 +1,19 @@
+﻿@using ShopFilip.IdentityModels
+@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@{
+    ViewData["Title"] = "ManageAccount";
+}
+<h1>ManageAccount</h1>
+@if (SignInManager.IsSignedIn(User))
+{
+    <a asp-action="Edit" asp-route-id="@UserManager.GetUserId(User)">Edit</a>
+    @ViewBag.Email
+    <a asp-area="" asp-controller="Account" asp-action="Manage" title="Manage">Witaj @UserManager.GetUserId(User)!</a>
+}
+else
+{
+    <h1>Aby zarządzać kontem należy się zalogować.</h1>
+}

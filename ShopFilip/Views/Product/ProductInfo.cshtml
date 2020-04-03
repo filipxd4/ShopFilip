@@ -1,0 +1,163 @@
+﻿@model ShopFilip.Models.Product
+@{
+    Layout = "_Layout";
+}
+
+@section CssLinks{
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/fotorama/4.6.4/fotorama.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fotorama/4.6.4/fotorama.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
+    <link rel="stylesheet" type="text/css" href="~/css/Product.css">
+}
+<div class="modal-body mainBlock rowa container">
+    <div class="col-md-6">
+        <form method="post" asp-controller="cart" asp-action="buy" asp-route-id="@Model.Id">
+            <h1>@Model.Name</h1>
+            <h6 style="text-align:left;"><strong>Opis</strong></h6>
+            <div class="information">@Html.Raw(Model.Description)</div>
+            <h6 style="text-align:left;"><strong>Dostępne rozmiary:</strong></h6>
+            <div style="display:flex;padding-bottom:10px">
+                <ul id="group_22">
+                    @for (var i = 0; i < Model.ProductAtribute.Count(); i++)
+                    {
+                        if (i == 0)
+                        {
+                            <li class="input-container pull-xs-left">
+                                <input class="input-radio" type="radio" name="size" value="@Model.ProductAtribute[i].Value" checked="checked">
+                                <span class="radio-label">@Model.ProductAtribute[i].Value</span>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="input-container pull-xs-left">
+                                <input class="input-radio" type="radio" name="size" value="@Model.ProductAtribute[i].Value">
+                                <span class="radio-label">@Model.ProductAtribute[i].Value</span>
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+            <span style="display:flex;" id="product-availability">
+                <i class="material-icons product-available"></i>
+                W magazynie
+            </span>
+            <div class="control">
+                <div class="quantity">
+                    <input id="quantity" name="number" type="number" min="1" max="" step="1" value="1">
+                </div>
+                <button class="btn buyButton" type="submit">
+                    <span class="price">@Model.Price$</span>
+                    <span class="shopping-cart"><i class="fa fa-shopping-cart" aria-hidden="true">🛒</i></span>
+                    Buy!
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div class="col-md-6 photoContainer">
+        <div class="fotorama" data-nav="thumbs" data-height="500">
+            @for (var i = 0; i < Model.Photos.Count(); i++)
+            {
+                <img src="@Model.Photos[i].Value">
+            }
+        </div>
+    </div>
+</div>
+<h1 style="margin-top:40px;margin-bottom:40px;">Tabela rozmiarów</h1>
+<div class="photoContainer">
+    <img class="product-image" src="@Html.DisplayFor(modelItem => Model.Table)" alt="">
+</div>
+
+@section Scripts {
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script>
+    jQuery('<div class="quantity-nav"><div class="quantity-button quantity-up">+</div><div class="quantity-button quantity-down">-</div></div>').insertAfter('.quantity input');
+    jQuery('.quantity').each(function() {
+        var spinner = jQuery(this),
+            input = spinner.find('input[type="number"]'),
+            btnUp = spinner.find('.quantity-up'),
+            btnDown = spinner.find('.quantity-down'),
+            min = input.attr('min'),
+            max = input.attr('max');
+
+        btnUp.click(function() {
+            let max = $("#quantity").attr('max');
+            var oldValue = parseFloat(input.val());
+            console.log(max)
+
+            if (oldValue >= max) {
+                var newVal = oldValue;
+            } else {
+                var newVal = oldValue + 1;
+            }
+            spinner.find("input").val(newVal);
+            spinner.find("input").trigger("change");
+        });
+
+        btnDown.click(function() {
+            var oldValue = parseFloat(input.val());
+            if (oldValue <= min) {
+                var newVal = oldValue;
+            } else {
+                var newVal = oldValue - 1;
+            }
+            spinner.find("input").val(newVal);
+            spinner.find("input").trigger("change");
+        });
+    });
+    $(".input-radio").click(function() {
+        var atrb = (this).value;
+        var idofProd = @Model.Id;
+
+        $.getJSON("/Product/GetQuantityByIdAndAtr", {
+            id: idofProd,
+            atr: atrb
+        }, function(response) {
+            $('#quantity').attr('max', response);
+            console.log($('#quantity').attr('max'))
+
+            if (response == 0) {
+                console.log($("#product-availability").text)
+                $("#product-availability").html('<i class="material-icons product-unavailable"></i> Brak w magazynie')
+                $('.buyButton').prop("disabled", true);
+                $('#quantity').prop("disabled", true);
+                $('.buyButton').css("cursor", "not-allowed");
+                $('#quantity').css("cursor", "not-allowed");
+                $('.quantity-button').css("cursor", "not-allowed");
+
+            } else {
+                $("#product-availability").html('<i class="material-icons product-available"></i> W magazynie')
+                $('.buyButton').prop("disabled", false);
+                $('#quantity').prop("disabled", false);
+                $('.buyButton').css("cursor", "pointer");
+                $('#quantity').css("cursor", "pointer");
+                $('.quantity-button').css("cursor", "pointer");
+            }
+        })
+    });
+
+    $(document).ready(function() {
+        var atr = $(".input-radio")[0].value;
+        $.ajax({
+            url: "/Product/GetQuantityByIdAndAtr",
+            data: {
+                id: @Model.Id,
+                atr: atr
+            },
+            traditional: true,
+            success: function(response) {
+                if (response == 0) {
+                    $('.buyButton').prop("disabled", true);
+                    $('#quantity').prop("disabled", true);
+                }
+                $("#quantity").attr('max', response);
+            }
+        });
+    });
+</script>
+}
+
+

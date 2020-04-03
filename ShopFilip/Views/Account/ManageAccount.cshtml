@@ -1,0 +1,44 @@
+﻿@using ShopFilip.IdentityModels
+@using Microsoft.AspNetCore.Identity
+@model ShopFilip.IdentityModels.ApplicationUser
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@{
+    ViewData["Title"] = "Edit";
+}
+<link rel="stylesheet" type="text/css" href="~/css/ShoppingCart.css">
+<link rel="stylesheet" type="text/css" href="~/css/Product.css">
+<style>
+    #manageForm {
+        margin-top: 20px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 58%;
+    }
+</style>
+<div class="container" style="display:flex">
+    <div class="col-md-6" id="manageForm" >
+        <h1>Dostępne akcje</h1>
+        <form id="manageForm" method="get" asp-controller="Account" asp-action="Edit" asp-route-id="@UserManager.GetUserId(User)">
+            <button class="btn buttonInManageAccount" type="submit">
+                Edytuj dane ✏️
+            </button>
+        </form>
+        <form id="manageForm" method="get" asp-controller="Account" asp-action="MyOrders" asp-route-id="@UserManager.GetUserId(User)">
+            <button class="btn buttonInManageAccount" type="submit">
+                Twoje zamówienia! 🎁
+            </button>
+        </form>
+    </div>
+    <div class="col-md-6" id="manageForm" style="text-align:left">
+        <h1>Dane osobowe</h1>
+        <h3 style="text-align:left">Imie: @Model.Name</h3>
+        <h3 style="text-align:left">Nazwisko: @Model.Surname</h3>
+        <h3 style="text-align:left">Miasto: @Model.Town</h3>
+        <h3 style="text-align:left">Ulica: @Model.Street</h3>
+        <h3 style="text-align:left">Kod pocztowy: @Model.PostalCode</h3>
+        <h3 style="text-align:left">Telefon: @Model.PhoneNumber</h3>
+    </div>
+</div>
+

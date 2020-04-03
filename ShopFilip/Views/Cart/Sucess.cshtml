@@ -1,0 +1,18 @@
+﻿@using ShopFilip.IdentityModels
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
+@inject SignInManager<ApplicationUser> SignInManager
+@if (SignInManager.IsSignedIn(User))
+{
+    <div style="text-align:center; top: 50%; padding-top:20%;">
+        <h1>Sucess! 🤘</h1>
+        <h2><a asp-controller="Account" asp-action="ManageAccount" asp-route-id="@UserManager.GetUserId(User)">To See Status click here 👈 </a></h2>
+    </div>
+}
+else
+{
+    <div style="text-align:center; top: 50%; padding-top:20%;">
+        <h1>You are not logged in 😞</h1>
+    </div>
+}

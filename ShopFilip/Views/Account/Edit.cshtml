@@ -1,0 +1,86 @@
+﻿@using ShopFilip.IdentityModels
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Identity
+@model ShopFilip.IdentityModels.ApplicationUser
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+<link rel="stylesheet" type="text/css" href="/css/Login-Register.css">
+<style>
+    label {
+        margin-top: 0.5rem;
+        margin-bottom: 0;
+    }
+
+    input[type=submit] {
+        margin-top: 10px;
+        width: 45%;
+        background-color: forestgreen;
+        color: white;
+    }
+
+    .submit {
+        display: flex;
+        justify-content: space-between;
+    }
+</style>
+<div class="row">
+    <div class="col-md-4 Login">
+        <h1>Zmień swoje dane</h1>
+        <h5>Aby zmienć swoje dane wpisz nowe kliknij zapisz i Gotowe! :)</h5>
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div>
+                <label asp-for="UserName" class="control-label">Nazwa urzytkownika</label>
+                <input asp-for="UserName" autocomplete="off" class="form-control" value="@Model.UserName" />
+                <span asp-validation-for="UserName"></span>
+            </div>
+            <div>
+                <label asp-for="Name" class="control-label">Imie</label>
+                <input asp-for="Name" id="ToUpper" autocomplete="off" class="form-control" value="@Model.Name" />
+                <span asp-validation-for="Name"></span>
+            </div>
+            <div>
+                <label asp-for="Surname" class="control-label">Nazwisko</label>
+                <input asp-for="Surname" id="ToUpper" autocomplete="off" class="form-control" value="@Model.Surname" />
+                <span asp-validation-for="Surname"></span>
+            </div>
+            <div>
+                <label asp-for="Email" class="control-label">E-mail</label>
+                <input asp-for="Email" autocomplete="off" class="form-control" value="@Model.Email" />
+                <span asp-validation-for="Email"></span>
+            </div>
+            <div>
+                <label asp-for="Town" autocomplete="off" class="control-label">Miasto</label>
+                <input asp-for="Town" class="form-control" value="@Model.Town" />
+                <span asp-validation-for="Town"></span>
+            </div>
+            <div>
+                <label asp-for="Street" autocomplete="off" class="control-label">Ulica</label>
+                <input asp-for="Street" class="form-control" value="@Model.Street" />
+                <span asp-validation-for="Street"></span>
+            </div>
+            <div>
+                <label asp-for="PostalCode" class="control-label">Kod-pocztowy</label>
+                <input asp-for="PostalCode" id="postalCode" maxlength="6" class="form-control" value="@Model.PostalCode" />
+                <span asp-validation-for="PostalCode"></span>
+            </div>
+            <div>
+                <label asp-for="PhoneNumber" autocomplete="off" class="control-label">Numer telefonu</label>
+                <input asp-for="PhoneNumber" id="phoneNumber" maxlength="11" class="form-control" value="@Model.PhoneNumber" />
+                <span asp-validation-for="PhoneNumber"></span>
+            </div>
+            <div class="submit">
+                <input type="submit" value="Nie zmieniaj danych" class="btn btn-default" onclick="goBack()" style=" background-color: red;" />
+                <input type="submit" value="Zmień i zapisz dane!" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function goBack() {
+        window.history.back();
+    }
+
+</script>

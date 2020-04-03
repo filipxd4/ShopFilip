@@ -1,0 +1,63 @@
+﻿@using ShopFilip.IdentityModels
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Identity
+@model ShopFilip.Models.Login
+@inject SignInManager<ApplicationUser> SignInManager
+<link rel="stylesheet" type="text/css" href="~/css/Login-Register.css">
+<style>
+    .input-validation-error {
+        border-color: red;
+    }
+
+    .field-validation-error {
+        color: red;
+    }
+
+    ul {
+        list-style: outside none none;
+        padding: 0;
+        margin-bottom: 20px;
+        background-color: #f8f9fa;
+        text-align: center;
+    }
+</style>
+@if (SignInManager.IsSignedIn(User))
+{
+    <div style="text-align:center; top: 50%; padding-top:20%;">
+        <h1>You are already Logged In! 🤘</h1>
+    </div>
+}
+else
+{
+    <h2 class="MainText">Login</h2>
+    <form method="post" asp-controller="Account" asp-action="Login" asp-route-returnurl="@Model.ReturnUrl" class="Login">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div>
+            <label asp-for="Username" class="control-label"></label>
+            <input asp-for="Username" class="form-control" />
+            <span asp-validation-for="Username" class="text-danger"></span>
+        </div>
+
+        <div>
+
+            <label asp-for="Password" class="control-label"></label>
+            <input asp-for="Password" class="form-control" />
+            <span asp-validation-for="Password"></span>
+        </div>
+
+        <div>
+            <label asp-for="RememberMe" class="control-label"></label>
+            <input asp-for="RememberMe" />
+            <span asp-validation-for="RememberMe"></span>
+        </div>
+        <div id="login-dont-have-account">
+            <input type="submit" value="Login" class="btn btn-default" id="button-login" />
+            <a asp-controller="Account" asp-action="Register">
+                <input type="button" value="Don't have account?" class="btn btn-default" id="button-dont-haveaccount" />
+            </a>
+        </div>
+    </form>
+}
+
+
+
