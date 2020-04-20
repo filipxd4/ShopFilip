@@ -108,6 +108,7 @@ namespace OnlineShop.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         private async Task<IActionResult> MyOrders(string id)
         {
             var aaa = await _userManager.FindByIdAsync(id);
@@ -116,6 +117,7 @@ namespace OnlineShop.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> myAction(string id, int Price, string Ip)
         {
             List<Item> cart = SesionHelper.GetObjectFromJson<List<Item>>(HttpContext.Session, "cart");
@@ -128,7 +130,7 @@ namespace OnlineShop.Controllers
             return Redirect(Uri);
         }
 
-
+        [Authorize]
         public async Task GetAccessTokenAsync(ApplicationUser user, int Price, List<Item> itemFromCart,string ip)
         {
             using (var httpClient = new HttpClient())

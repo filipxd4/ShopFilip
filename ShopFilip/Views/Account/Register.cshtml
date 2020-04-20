@@ -4,69 +4,67 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @model ShopFilip.Models.Register
 @{
-    ViewBag.Title = "Register";
+    ViewData["Title"] = ViewContext.RouteData.Values["action"].ToString();
 }
 
-<style>
-    #ToUpper {
-        text-transform: capitalize;
-    }
-</style>
-<link rel="stylesheet" type="text/css" href="~/css/Login-Register.css">
+@section CssLinks {
+    <link rel="stylesheet" type="text/css" href="~/css/Login-Register-Edit.css">
+}
+
 @if (SignInManager.IsSignedIn(User))
 {
     <div style="text-align:center; top: 50%; padding-top:20%;">
-        <h1>You are already Logged In! 🤘</h1>
+        <h1>Jesteś już zalogowany! 🤘</h1>
     </div>
 }
 else
 {
-    <h2 class="MainText">Register</h2>
-    <form method="post" asp-controller="Account" asp-action="Register" class="Login">
+    <h2 class="title-header">Rejestracja</h2>
+    <form method="post" asp-controller="Account" asp-action="Register" class="form-login-register">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div>
-            <label asp-for="Username" class="control-label"></label>
+            <label asp-for="Username" class="control-label">Nazwa użytkownika</label>
             <input asp-for="Username" autocomplete="off" class="form-control" />
             <span asp-validation-for="Username"></span>
         </div>
         <div>
-            <label asp-for="Name" class="control-label"></label>
-            <input asp-for="Name" id="ToUpper" autocomplete="off" class="form-control" />
+            <label asp-for="Name" class="control-label">Imie</label>
+            <input asp-for="Name" id="text-to-upper" autocomplete="off" class="form-control" />
             <span asp-validation-for="Name"></span>
         </div>
         <div>
-            <label asp-for="Surname" class="control-label"></label>
-            <input asp-for="Surname" id="ToUpper" autocomplete="off" class="form-control" />
+            <label asp-for="Surname" class="control-label">Nazwisko</label>
+            <input asp-for="Surname" id="text-to-upper" autocomplete="off" class="form-control" />
             <span asp-validation-for="Surname"></span>
         </div>
         <div>
-            <label asp-for="Email" class="control-label"></label>
+            <label asp-for="Email" class="control-label">Email</label>
             <input asp-for="Email" autocomplete="off" class="form-control" />
             <span asp-validation-for="Email"></span>
         </div>
         <div>
-            <label asp-for="Password" class="control-label"></label>
-            <input asp-for="Password" class="form-control" />
+            <label asp-for="Password" class="control-label">Hasło</label>
+            <input asp-for="Password" autocomplete="off" class="form-control" />
             <span asp-validation-for="Password"></span>
         </div>
         <div>
-            <label asp-for="PostalCode" class="control-label"></label>
-            <input asp-for="PostalCode" id="postalCode" maxlength="6" class="form-control" />
+            <label asp-for="PostalCode" class="control-label">Kod Pocztowy</label>
+            <input asp-for="PostalCode" id="postalcode" maxlength="6" class="form-control" />
             <span asp-validation-for="PostalCode"></span>
         </div>
         <div>
-            <label asp-for="Town" autocomplete="off" class="control-label"></label>
-            <input asp-for="Town" class="form-control" />
+            <label asp-for="Town" class="control-label">Miasto</label>
+            <input asp-for="Town" autocomplete="off" class="form-control" />
             <span asp-validation-for="Town"></span>
         </div>
         <div>
-            <label asp-for="Street" autocomplete="off" class="control-label"></label>
-            <input asp-for="Street" class="form-control" />
+            <label asp-for="Street" class="control-label">Ulica</label>
+            <input asp-for="Street" autocomplete="off" class="form-control" />
             <span asp-validation-for="Street"></span>
         </div>
         <div>
-            <label asp-for="PhoneNumber" autocomplete="off" class="control-label"></label>
-            <input asp-for="PhoneNumber" id="phoneNumber" maxlength="11" class="form-control" />
+            <label asp-for="PhoneNumber" class="control-label">Numer telefonu</label>
+            <input asp-for="PhoneNumber" autocomplete="off" id="phone-number" maxlength="11" class="form-control" />
             <span asp-validation-for="PhoneNumber"></span>
         </div>
         <div>
@@ -74,32 +72,10 @@ else
         </div>
     </form>
 }
+@section Scripts {
+    <script src="https://unpkg.com/imask"></script>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/js/InputSpecialFill.js"></script>
+}
 
-<script src="~/lib/jquery/dist/jquery.js"></script>
-<script src="https://unpkg.com/imask"></script>
-<script>
-    var MaskZipCode = IMask(
-        document.getElementById('postalCode'),
-        {
-            mask: [
-                {
-                    mask: '00-000'
-                },
-                {
-                    mask: /^\S*?\S*$/
-                }
-            ]
-        });
-    var maskPhoneNumber = IMask(
-        document.getElementById('phoneNumber'),
-        {
-            mask: [
-                {
-                    mask: '000 000 000'
-                },
-                {
-                    mask: /^\S*?\S*$/
-                }
-            ]
-        });
-</script>
+

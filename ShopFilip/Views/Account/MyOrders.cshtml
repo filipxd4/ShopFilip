@@ -1,5 +1,7 @@
 ﻿@model IEnumerable<ShopFilip.Models.OrderProduct>
-
+@{
+    ViewData["Title"] = ViewContext.RouteData.Values["action"].ToString();
+}
 <div class="container">
     @if (Model.Count() == 0)
     {
@@ -28,16 +30,26 @@
                             @item.OrderId
                         </td>
                         <td>
-                            @foreach (var itemo in item.PoductQuantityAtribute)
+                            @if (item.PoductQuantityAtribute.Count() == 0 || item.PoductQuantityAtribute == null)
                             {
-                                foreach (var itema in itemo.Product)
+                                <span>Brak produktu</span>
+                            }
+                            else
+                            {
+                                @foreach (var itemo in item.PoductQuantityAtribute)
                                 {
-                                    <span>@itema.Name</span>
-                                    <span>@item.OrderStatus</span>
-                                    <span>@itemo.Quantity</span>
-                                    <img src="@itema.Photos[0].Value" width="100" />
+
+                                    foreach (var itema in itemo.Product)
+                                    {
+                                        <span>@itema.Name</span>
+                                        <span>@item.OrderStatus</span>
+                                        <span>@itemo.Quantity</span>
+                                        <img src="@itema.Photos[0].Value" width="100" />
+                                    }
+
                                 }
                             }
+
                         </td>
                         <td>
                             @item.OrderDate

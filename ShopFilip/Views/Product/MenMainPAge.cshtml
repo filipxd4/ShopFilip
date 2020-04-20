@@ -28,18 +28,17 @@
             <input type="button" id="search-btn" value="Szukaj!" asp-route-selected="" class="btn btn-default" />
         </div>
     </div>
-
     <div class="container" id="products">
 
     </div>
     <div id="paged" class="col-8 offset-2">
 
     </div>
-
 </div>
 @section Scripts {
     <script src="~/lib/jquery/dist/jquery.js"></script>
     <script>
+        const gender = "man";
         var eventTimeout;
         $(document).ready(function () {
             GetPageData("", "", 1);
@@ -72,7 +71,7 @@
                 console.log(groupOfProducts )
                 $.ajax({
                     url: '/Product/GetPaggedData',
-                    data: { SearchValue: searchValue, Sizes: sizes, GroupOfProducts: groupOfProducts ,pageNumber: pageNum, pageSize: pageSize},
+                    data: { SearchValue: searchValue, Sizes: sizes, GroupOfProducts: groupOfProducts,gender,pageNumber: pageNum, pageSize: pageSize},
                     traditional: true,
                     success: function (response) {
                         let rowData = "";
@@ -157,6 +156,6 @@
                 event.preventDefault();
                 document.getElementById("search-btn").click();
             }
-        }); 
+        });
     </script>
 }

@@ -1,0 +1,82 @@
+﻿.title-header {
+    text-align: center;
+}
+
+.form-login-register {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 30%;
+}
+
+.button-submit {
+    display: flex;
+    align-items: center;
+    margin: 10px;
+}
+
+#button-login-register {
+    margin-top: 0.5rem;
+}
+
+#login-dont-have-account {
+    padding-bottom:10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.input-validation-error {
+    border-color: red;
+}
+
+.field-validation-error {
+    color: red;
+}
+
+#text-to-upper{
+    text-transform: capitalize;
+}
+
+label {
+    margin-top: 0.5rem;
+    margin-bottom: 0;
+}
+
+.submit-edit {
+    margin-top: 10px;
+    width: 45%;
+    background-color: forestgreen;
+    color: white;
+}
+
+.buttons-edit {
+    display: flex;
+    justify-content: space-between;
+}
+
+.MainText {
+    text-align: center;
+}
+
+.Login {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 30%;
+}
+
+.button {
+    display: flex;
+    align-items: center;
+    margin: 10px;
+}
+
+#button-login-register {
+    margin-top: 0.5rem;
+}
+
+#login-dont-have-account {
+    padding-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+}

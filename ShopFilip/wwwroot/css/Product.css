@@ -21,7 +21,6 @@ h1 {
     color:black;
 }
 
-
 .product-details {
     position: relative;
     text-align: left;
@@ -186,43 +185,6 @@ h1 {
 .product-image:hover img {
     transform: scale(1.2, 1.2);
 }
-
-.buttonInManageAccount {
-    transform: translateY(0px);
-    transition: 0.3s linear;
-    background: white;
-    border-radius: 5px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    cursor: pointer;
-    outline: none;
-    border: 1px solid #434444;
-    padding: 0;
-    margin: 0;
-    width: 300px;
-    color: black;
-    height: 60px;
-}
-
-    .buttonInManageAccount:hover {
-        transform: translateY(-4px);
-        background: #434444;
-        color: white;
-    }
-
-
-
-
-
-
-
-
-
-
-
-
 
 .quantity {
     position: relative;

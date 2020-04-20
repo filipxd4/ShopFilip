@@ -4,7 +4,7 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 @{
-    ViewData["Title"] = "ManageAccount";
+    ViewData["Title"] = ViewContext.RouteData.Values["action"].ToString();
 }
 <h1>ManageAccount</h1>
 @if (SignInManager.IsSignedIn(User))

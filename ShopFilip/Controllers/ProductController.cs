@@ -66,10 +66,10 @@ namespace OnlineShop.Controllers
             return View();
         }
 
-        [Route("WomanMainPage")]
-        public async Task<IActionResult> WomanMainPage()
+        [Route("WomanMainPage/{id}")]
+        public IActionResult WomanMainPage(int? pageNumber, string id)
         {
-            return View(await _context.ProductsData.ToListAsync());
+            return View();
         }
 
         public JsonResult GetQuantityByIdAndAtr(int id, string atr)
@@ -86,7 +86,7 @@ namespace OnlineShop.Controllers
             return Json(quantity);
         }
 
-        public ActionResult GetPaggedData(string SearchValue, string[] Sizes, string GroupOfProducts, int pageNumber = 1, int pageSize = 2)
+        public ActionResult GetPaggedData(string SearchValue, string[] Sizes, string GroupOfProducts, string gender, int pageNumber = 1, int pageSize = 2)
         {
             var a = Sizes.ToArray();
             List<Product> tempListOfProducts = new List<Product>();
@@ -95,7 +95,7 @@ namespace OnlineShop.Controllers
             if (SearchValue == null)
             {
                 tempListOfProducts.AddRange(from product in _context.ProductsData.Include(photo => photo.Photos).Include(atr => atr.ProductAtribute)
-                              where product.Group == GroupOfProducts
+                              where product.Group == GroupOfProducts && product.Gender==gender
                                             select product);
                 if (Sizes.Count() != 0)
                 {
@@ -131,7 +131,7 @@ namespace OnlineShop.Controllers
             else
             {
                 tempListOfProducts.AddRange(from product in _context.ProductsData.Include(c => c.Photos).Include(c => c.ProductAtribute)
-                              where product.Name.ToLower().Contains(SearchValue.ToLower())&& product.Group == GroupOfProducts
+                              where product.Name.ToLower().Contains(SearchValue.ToLower())&& product.Group == GroupOfProducts && product.Gender == gender
                                             select product);
                 if (Sizes.Count() != 0)
                 {

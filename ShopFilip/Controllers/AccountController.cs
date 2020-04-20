@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Net.Http;
 using static ShopFilip.Helpers.DataPayU;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ShopFilip.Controllers
 {
@@ -73,12 +74,14 @@ namespace ShopFilip.Controllers
 
 
         [HttpGet]
+        [Authorize]
         public IActionResult Orders()
         {
             return View();
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> MyOrders(string id)
         {
             var aaa = await _userManager.FindByIdAsync(id);
@@ -108,12 +111,19 @@ namespace ShopFilip.Controllers
                 List<Product> productList = new List<Product>();
                 foreach (var itemo in item.Products)
                 {
-                    Product product = _context.ProductsData.Where(x => x.Id == itemo.IdOfProduct).Include(x=>x.Photos).First();
-                    if (!productList.Contains(product))
+                    try
                     {
-                        productList.Add(product);
+                        Product product = _context.ProductsData.Where(x => x.Id == itemo.IdOfProduct).Include(x => x.Photos).First();
+                        if (!productList.Contains(product))
+                        {
+                            productList.Add(product);
+                        }
+                        prQ.Add(new PoductQuantityAtribute(productList, itemo.Quantity, itemo.Value));
                     }
-                    prQ.Add(new PoductQuantityAtribute(productList, itemo.Quantity,itemo.Value));
+                    catch
+                    {
+                        //throw new InvalidOperationException("Brak produktu");
+                    }
                 }
                 DateTime dateTime = DateTime.Parse(item.DateOfOrder);
                 orderProd.Add(new OrderProduct(prQ, dateTime, item.OrderId, item.StatusOrder));
@@ -130,6 +140,7 @@ namespace ShopFilip.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Logout()
         {
             await _signManager.SignOutAsync();
@@ -170,12 +181,23 @@ namespace ShopFilip.Controllers
             return View();
         }
 
+        [Authorize]
         public async Task<IActionResult> ManageAccount(string id)
         {
             bool isAuthenticated = User.Identity.IsAuthenticated;
             if (isAuthenticated)
             {
-                var user = await _userManager.FindByIdAsync(id);
+                ApplicationUser user;
+                if (User.IsInRole("Admin"))
+                {
+                    user = await _userManager.FindByIdAsync(id);
+                    ViewBag.Role = "Admin";
+                }
+                else
+                {
+                    user = await _userManager.FindByIdAsync(id);
+                    ViewBag.Role = "User";
+                }
                 return View(user);
             }
             else
@@ -185,6 +207,7 @@ namespace ShopFilip.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Edit(string id)
         {
             if (id == null)
@@ -201,6 +224,7 @@ namespace ShopFilip.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Edit(string id, Register model)
         {
             var user = await _userManager.FindByIdAsync(id);

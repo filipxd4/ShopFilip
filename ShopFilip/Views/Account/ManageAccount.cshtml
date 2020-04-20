@@ -4,34 +4,34 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = ViewContext.RouteData.Values["action"].ToString();
 }
-<link rel="stylesheet" type="text/css" href="~/css/ShoppingCart.css">
-<link rel="stylesheet" type="text/css" href="~/css/Product.css">
-<style>
-    #manageForm {
-        margin-top: 20px;
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-        width: 58%;
-    }
-</style>
+@section CssLinks {
+    <link rel="stylesheet" type="text/css" href="~/css/Manage-Account.css">
+}
 <div class="container" style="display:flex">
-    <div class="col-md-6" id="manageForm" >
-        <h1>Dostępne akcje</h1>
-        <form id="manageForm" method="get" asp-controller="Account" asp-action="Edit" asp-route-id="@UserManager.GetUserId(User)">
-            <button class="btn buttonInManageAccount" type="submit">
+    <div class="col-md-6" id="manage-form">
+        <h1 style="text-align:center">Dostępne akcje</h1>
+        <form id="manage-form" method="get" asp-controller="Account" asp-action="Edit" asp-route-id="@UserManager.GetUserId(User)">
+            <button class="btn button-manage-account" type="submit">
                 Edytuj dane ✏️
             </button>
         </form>
-        <form id="manageForm" method="get" asp-controller="Account" asp-action="MyOrders" asp-route-id="@UserManager.GetUserId(User)">
-            <button class="btn buttonInManageAccount" type="submit">
+        <form id="manage-form" method="get" asp-controller="Account" asp-action="MyOrders" asp-route-id="@UserManager.GetUserId(User)">
+            <button class="btn button-manage-account" type="submit">
                 Twoje zamówienia! 🎁
             </button>
         </form>
+        @if (ViewBag.Role == "Admin")
+        {
+            <form id="manage-form" method="get" asp-controller="Admin" asp-action="Index">
+                <button class="btn button-manage-account" type="submit">
+                    Panel Admina
+                </button>
+            </form>
+        }
     </div>
-    <div class="col-md-6" id="manageForm" style="text-align:left">
+    <div class="col-md-6" id="manage-form" style="text-align:left">
         <h1>Dane osobowe</h1>
         <h3 style="text-align:left">Imie: @Model.Name</h3>
         <h3 style="text-align:left">Nazwisko: @Model.Surname</h3>

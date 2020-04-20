@@ -207,11 +207,19 @@ namespace ShopFilip.Controllers
                 var productsId = _context.ProductsId.Where(x => x.IdOfOrder == itema.OrderId);
                 foreach (var itemo in productsId)
                 {
-                    Product product = _context.ProductsData.Where(x => x.Id == itemo.IdOfProduct).Include(x => x.Photos).First();
-                    if (!productList.Contains(product))
+                    try
                     {
-                        productList.Add(product);
+                        Product product = _context.ProductsData.Where(x => x.Id == itemo.IdOfProduct).Include(x => x.Photos).First();
+                        if (product != null && !productList.Contains(product))
+                        {
+                            productList.Add(product);
+                        }
                     }
+                    catch
+                    {
+
+                    }
+
                     prQ.Add(new PoductQuantityAtribute(productList, itemo.Quantity, itemo.Value));
                 }
                 DateTime dateTime = DateTime.Parse(itema.DateOfOrder);
@@ -244,7 +252,7 @@ namespace ShopFilip.Controllers
             return Json(orderChart);
         }
 
-        public async Task<JsonResult> AddNewToTable()
+        public async Task<JsonResult> AddNewTable()
         {
             var file = Request.Form.Files.First();
             var imagePath = @"\Upload\Tables\";

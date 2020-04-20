@@ -1,0 +1,33 @@
+﻿#manage-form {
+    margin-top: 20px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 58%;
+}
+
+
+.button-manage-account {
+    transform: translateY(0px);
+    transition: 0.3s linear;
+    background: white;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    cursor: pointer;
+    outline: none;
+    border: 1px solid #434444;
+    padding: 0;
+    margin: 0;
+    width: 300px;
+    color: black;
+    height: 60px;
+}
+
+    .button-manage-account:hover {
+        transform: translateY(-4px);
+        background: #434444;
+        color: white;
+    }

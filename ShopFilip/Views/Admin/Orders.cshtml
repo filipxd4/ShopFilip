@@ -54,14 +54,22 @@
                                     <option value="Paid">Paid</option>
                                 }
                             </select>
+
                             @foreach (var itema in itemo.PoductQuantityAtribute)
                             {
-
-                                foreach (var product in itema.Product)
+                                @if (itema.Product.Count() == 0 || itema.Product == null)
                                 {
-                                    <br /><span><b>Produkt: </b>@product.Name </span><br />
-                                    <span><b>Ilość: </b>@itema.Quantity </span><img src="@product.Photos[0].Value" width="100" /><br>
-                                    <span><b>Kwota: </b>@product.Price zł</span><br>
+                                    <br /><span><b>Produkt: </b>Produkt już niedostępny</span><br />
+
+                                }
+                                else
+                                {
+                                    foreach (var product in itema.Product)
+                                    {
+                                        <br /><span><b>Produkt: </b>@product.Name </span><br />
+                                        <span><b>Ilość: </b>@itema.Quantity </span><img src="@product.Photos[0].Value" width="100" /><br>
+                                        <span><b>Kwota: </b>@product.Price zł</span><br>
+                                    }
                                 }
                             }
                         </td>
