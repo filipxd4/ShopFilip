@@ -66,7 +66,7 @@
         color: white;
         top: -10px;
         right: -10px;
-        z-index: 2;
+        z-index: 1;
         cursor: pointer;
     }
 
@@ -268,6 +268,7 @@
                 <div class="form-group">
                     <label class="label" for="gallery-photo-add">Dodaj Zdjęcia</label>
                     <input type="file" name="pic" multiple id="gallery-photo-add">
+
                     <div class="gallery" id="gal">
                         @foreach (var item in Model.Photos)
                         {
@@ -290,7 +291,7 @@
                 <p><a class="buttona" href="#ex1" id="bb" rel="modal:open">Dodaj Tabele</a></p>
             </div>
             <div class="form-group">
-                <input type="button" onClick='submitDetailsForm()' class="btn btn-default" />
+                <input type="button" value="Zapisz" onClick='submitDetailsForm()' class="btn btn-default" />
             </div>
         </div>
     </form>
@@ -441,7 +442,10 @@
         $('div#photos').empty();
         $.getJSON("/Admin/GetAllTables", function (response) {
             for (var i = 0; i < response.length; i++) {
-                var res = response[i].replace("C:\\Users\\Filip\\source\\repos\\ShopFilip\\ShopFilip\\wwwroot", "");
+                console.log(response)
+                var res = response[i].replace("C:\\Users\\Filip\\source\\repos\\Shop\\OnlineShop\\ShopFilip\\wwwroot", "");
+                console.log(res)
+
                 $('div#photos').append('<label> <input type="radio" id="radio" name="test" value="' + res + '"  > <img  height="100px" src="' + res + '"></label>')
             }
         })
