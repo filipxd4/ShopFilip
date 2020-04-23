@@ -237,6 +237,7 @@
     $("#button-add-table").click(function () {
         var a = $('input[name="test"]:checked').val();
         document.getElementById('table-photo-add').defaultValue = a;
+        $("#table-added").html(""); 
         $("#table-added").append("<p>Dodano tabele: </p>" + a)
     });
 
@@ -346,7 +347,6 @@
             contentType: 'application/json',
             data: JSON.stringify(myData),
             success: function (response) {
-                console.log("siemano");
                 if (response.success) {
                     console.log("siemano");
                     $('#modal-set-center').modal('show');
@@ -377,7 +377,6 @@
     function GetTables() {
         $('div#photos').empty();
         $.getJSON("/Admin/GetAllTables", function (response) {
-            console.log(response)
             for (var i = 0; i < response.length; i++) {
                 var res = response[i].replace("C:\\Users\\Filip\\source\\repos\\Shop\\OnlineShop\\ShopFilip\\wwwroot", "");
                 $('div#photos').append('<label> <input type="radio" id="radio" name="test" value="' + res + '"  > <img  height="100px" src="' + res + '"></label>')

@@ -38,7 +38,7 @@
         outline: 2px solid #f00;
     }
 
-    .buttona {
+    .button-style {
         background-color: Crimson;
         border-radius: 5px;
         color: white;
@@ -46,7 +46,7 @@
         text-decoration: none;
     }
 
-    #photoMin {
+    #photo-min-product {
         -webkit-filter: grayscale(100%);
         filter: grayscale(100%);
     }
@@ -70,7 +70,7 @@
         cursor: pointer;
     }
 
-    #myModalSetMain {
+    #modal-set-center {
         position: absolute;
         left: 50%;
         top: 50%;
@@ -78,6 +78,7 @@
         z-index: 9999;
         bottom: auto;
     }
+
     .row {
         border: solid gray 4px;
         border-radius: 16px;
@@ -135,16 +136,16 @@
                         {
                             @if (item.Value.Equals("M"))
                             {
-                                <input class="aa" type="checkbox" checked="checked" name="size" value="M">
-                                <input class="bb" min="0" type="number" name="quantity" value="@item.Quantity">
+                                <input class="size-container" type="checkbox" checked="checked" name="size" value="M">
+                                <input min="0" type="number" name="quantity" value="@item.Quantity">
                                 <span class="checkmark"></span>
                                 a = true;
                             }
                         }
                         @if (a == false)
                         {
-                            <input class="aa" type="checkbox" name="size" value="M">
-                            <input class="bb" style="display:none" min="0" type="number" name="quantity">
+                            <input class="size-container" type="checkbox" name="size" value="M">
+                            <input style="display:none" min="0" type="number" name="quantity">
                             <span class="checkmark"></span>
                         }
                     </label>
@@ -155,16 +156,16 @@
                         {
                             @if (item.Value.Equals("L"))
                             {
-                                <input class="aa" type="checkbox" checked="checked" name="size" value="L">
-                                <input class="bb" min="0" type="number" name="quantity" value="@item.Quantity">
+                                <input class="size-container" type="checkbox" checked="checked" name="size" value="L">
+                                <input min="0" type="number" name="quantity" value="@item.Quantity">
                                 <span class="checkmark"></span>
                                 b = true;
                             }
                         }
                         @if (b == false)
                         {
-                            <input class="aa" type="checkbox" name="size" value="L">
-                            <input class="bb" style="display:none" min="0" type="number" name="quantity">
+                            <input class="size-container" type="checkbox" name="size" value="L">
+                            <input style="display:none" min="0" type="number" name="quantity">
                             <span class="checkmark"></span>
                         }
                     </label>
@@ -175,16 +176,16 @@
                         {
                             @if (item.Value.Equals("XL"))
                             {
-                                <input class="aa" type="checkbox" checked="checked" name="size" value="XL">
-                                <input class="bb" min="0" type="number" name="quantity" value="@item.Quantity">
+                                <input class="size-container" type="checkbox" checked="checked" name="size" value="XL">
+                                <input min="0" type="number" name="quantity" value="@item.Quantity">
                                 <span class="checkmark"></span>
                                 c = true;
                             }
                         }
                         @if (c == false)
                         {
-                            <input class="aa" type="checkbox" name="size" value="XL">
-                            <input class="bb" style="display:none" min="0" type="number" name="quantity">
+                            <input class="size-container" type="checkbox" name="size" value="XL">
+                            <input style="display:none" min="0" type="number" name="quantity">
                             <span class="checkmark"></span>
                         }
                     </label>
@@ -195,16 +196,16 @@
                         {
                             @if (item.Value.Equals("XXL"))
                             {
-                                <input class="aa" type="checkbox" checked="checked" name="size" value="XXL">
-                                <input class="bb" min="0" type="number" name="quantity" value="@item.Quantity">
+                                <input class="size-container" type="checkbox" checked="checked" name="size" value="XXL">
+                                <input min="0" type="number" name="quantity" value="@item.Quantity">
                                 <span class="checkmark"></span>
                                 d = true;
                             }
                         }
                         @if (d == false)
                         {
-                            <input class="aa" type="checkbox" name="size" value="XXL">
-                            <input class="bb" style="display:none" min="0" type="number" name="quantity">
+                            <input class="size-container" type="checkbox" name="size" value="XXL">
+                            <input style="display:none" min="0" type="number" name="quantity">
                             <span class="checkmark"></span>
                         }
                     </label>
@@ -270,14 +271,14 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="label" for="gallery-photo-add">Dodaj Zdjęcia</label>
+                    <label class="label" for="gallery-photo-add">Dodaj photo-of-productęcia</label>
                     <input type="file" name="pic" multiple id="gallery-photo-add">
 
                     <div class="gallery" id="gal">
                         @foreach (var item in Model.Photos)
                         {
                             <div id='photo'>
-                                <input id='x' type='button' value='X'><img name='zdj' width='100' id='photoMin' src="@item.Value">
+                                <input id='x' type='button' value='X'><img name='photo-of-product' width='100' id='photo-min-product' src="@item.Value">
                             </div>
                         }
                     </div>
@@ -285,14 +286,14 @@
 
                 <div class="form-group">
                     <input asp-for="Table" name="tbl" id="table-photo-add" value="@Model.Table" hidden>
-                    <div id="tableAdded">
+                    <div id="table-added">
                         @if (Model.Table != "")
                         {
                             <p>Dodano tabele: </p>@Model.Table
                         }
                     </div>
                 </div>
-                <p><a class="buttona" href="#ex1" id="bb" rel="modal:open">Dodaj Tabele</a></p>
+                <p><a class="button-style" href="#ex1" id="add-table" rel="modal:open">Dodaj Tabele</a></p>
             </div>
             <div class="form-group">
             </div>
@@ -303,9 +304,9 @@
         <div id="photos">
 
         </div>
-        <a class="buttona" href="#" rel="modal:close" id="ggg">Add Table</a>
-        <label class="label" for="addNewToTable">Dodaj Nową tabele</label>
-        <input type="file" name="pic" id="addNewToTable">
+        <a class="button-style" href="#" rel="modal:close" id="button-add-table">Add Table</a>
+        <label class="label" for="add-new-table">Dodaj Nową tabele</label>
+        <input type="file" name="pic" id="add-new-table">
     </div>
     <div style="display:flex; width:100%">
         <div style="width:50%;padding-top:10px;display:flex;justify-content:flex-start">
@@ -314,13 +315,13 @@
             </button>
         </div>
         <div style="width:50%;padding-top:10px;display:flex;justify-content:flex-end;">
-            <input type="button" value="Zapisz" onClick='submitDetailsForm()' class="btn btn-default" style="background-color:green;color:white" />
+            <input type="button" value="Zapisz" id="submit-form"  class="btn btn-default" style="background-color:green;color:white" />
         </div>
     </div>
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="myModalSetMain">
+<div class="modal fade" id="modal-set-center">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-body">
@@ -335,7 +336,39 @@
 <script src="~/js/CustomJavaScripts.js"></script>
 <script src="~/lib/jquery/dist/jquery.js"></script>
 <script>
-    $('.aa').change(function () {
+    $("#submit-form").click(function () {
+        SubmitEditForm()
+    });
+
+    $("#add-table").click(function () {
+        GetTables()
+    });
+
+    $("#button-add-table").click(function () {
+        var a = $('input[name="test"]:checked').val();
+        document.getElementById('table-photo-add').defaultValue = a;
+        $("#table-added").html("");
+        $("#table-added").append("<p>Dodano tabele: </p>" + a)
+    });
+
+    $('body').on('click', '#x', function () {
+        $(this).closest('div').remove();
+        var removePhoto  = $(this).closest('div').children().eq(1).attr("src")
+        $.ajax({
+            url: "/Admin/RemoveFromDatabase",
+            type: "POST",
+            data: { 'path': removePhoto  },
+            dataType: 'text',
+            success: function () {
+                if (response.success) {
+                    $("#getCode").html(resp);
+                    $("#getCodeModal").modal('show');
+                }
+            },
+        });
+    });
+
+    $('.size-container').change(function () {
         if (this.checked) {
             $(this).nextAll('input').first().show();
         }
@@ -344,30 +377,10 @@
         }
     });
 
-    $('body').on('click', '#x', function () {
-        $(this).closest('div').remove();
-        var a = $(this).closest('div').children().eq(1).attr("src")
-        console.log(a)
-        $.ajax({
-            url: "/Admin/RemoveFromDatabase",
-            type: "POST",
-            data: { 'path': a },
-            dataType: 'text',
-            success: function () {
-                if (response.success) {
-                    console.log("siemano");
-                    $("#getCode").html(resp);
-                    $("#getCodeModal").modal('show');
-                }
-            },
-        });
-    });
-
     $("#gallery-photo-add").change(function () {
-        var files = document.getElementById('gallery-photo-add').files;
-        console.log("files: " + files)
+        let files = document.getElementById('gallery-photo-add').files;
+        let data = new FormData();
 
-        var data = new FormData();
         for (var i = 0; i < files.length; i++) {
             data.append(files[i].name, files[i]);
         }
@@ -379,17 +392,36 @@
             contentType: false,
             success: function (response) {
                 for (var i = 0; i < response.length; i++) {
-                    imagesPreview(response[i], 'div.gallery');
+                    ImagesPreview(response[i], 'div.gallery');
                 }
             },
         });
     });
 
-    function imagesPreview(input, placeToInsertImagePreview) {
-        $(placeToInsertImagePreview).append("<div id='photo'><input id='x' type='button' value='X'><img name='zdj' width='100px' id='photoMin' src='" + input + "'></div>");
+    $("#add-new-table").change(function () {
+        let fileUpload = $("#add-new-table").get(0);
+        let files = fileUpload.files;
+        let data = new FormData();
+        for (var i = 0; i < files.length; i++) {
+            data.append(files[i].name, files[i]);
+        }
+        $.ajax({
+            url: "/Admin/AddNewTable",
+            type: "POST",
+            data: data,
+            processData: false,
+            contentType: false,
+            success: function () {
+            },
+        });
+        GetTables();
+    });
+
+    function ImagesPreview(input, placeToInsertImagePreview) {
+        $(placeToInsertImagePreview).append("<div id='photo'><input id='x' type='button' value='X'><img name='photo-of-product' width='100px' id='photo-min-product' src='" + input + "'></div>");
     }
 
-    function submitDetailsForm() {
+    function SubmitEditForm() {
         let group = $("input[name='group']:checked").val();
         let gender = $("input[name='gender']:checked").val();
         let size = $("input[name='size']:checked").map(function () { return $(this).val(); }).get();
@@ -398,7 +430,7 @@
         let price = $("#price").val()
         let description = $("#description").val().replace(/\n/g, "<br />")
         let quantity = $("input[name='quantity']").map(function () { return $(this).val(); }).get()
-        let photos = $("img[name='zdj']").map(function () { return $(this).attr("src"); }).get()
+        let photos = $("img[name='photo-of-product']").map(function () { return $(this).attr("src"); }).get()
         let id = $("#idOfProoduct").val();
 
         var myData = {
@@ -423,7 +455,7 @@
             success: function (response) {
                 if (response.success) {
                     console.log("siemano");
-                    $('#myModalSetMain').modal('show');
+                    $('#modal-set-center').modal('show');
                 }
             },
         });
@@ -433,13 +465,13 @@
         var imagesPreview = function (input, placeToInsertImagePreview) {
 
             if (input.files) {
-                var filesAmount = input.files.length;
+                let filesAmount = input.files.length;
 
                 for (i = 0; i < filesAmount; i++) {
                     var reader = new FileReader();
 
                     reader.onload = function (event) {
-                        $(placeToInsertImagePreview).append("<div id='photo'><input id='x' type='button' value='X'><img name='zdj' width='100px' id='photoMin' src='" + event.target.result + "'></div>");
+                        $(placeToInsertImagePreview).append("<div id='photo'><input id='x' type='button' value='X'><img name='zdj' width='100px' id='photo-min-product' src='" + event.target.result + "'></div>");
                     }
                     reader.readAsDataURL(input.files[i]);
                 }
@@ -455,45 +487,11 @@
         $('div#photos').empty();
         $.getJSON("/Admin/GetAllTables", function (response) {
             for (var i = 0; i < response.length; i++) {
-                console.log(response)
                 var res = response[i].replace("C:\\Users\\Filip\\source\\repos\\Shop\\OnlineShop\\ShopFilip\\wwwroot", "");
-                console.log(res)
-
                 $('div#photos').append('<label> <input type="radio" id="radio" name="test" value="' + res + '"  > <img  height="100px" src="' + res + '"></label>')
             }
         })
     }
-
-    $("#bb").click(function () {
-        GetTables()
-    });
-
-    $("#addNewToTable").change(function () {
-        var fileUpload = $("#addNewToTable").get(0);
-        var files = fileUpload.files;
-        var data = new FormData();
-        for (var i = 0; i < files.length; i++) {
-            data.append(files[i].name, files[i]);
-        }
-        $.ajax({
-            url: "/Admin/AddNewToTable",
-            type: "POST",
-            data: data,
-            processData: false,
-            contentType: false,
-            success: function () {
-                console.log("a")
-            },
-        });
-        GetTables();
-    });
-
-    $("#ggg").click(function () {
-        var a = $('input[name="test"]:checked').val();
-        document.getElementById('table-photo-add').defaultValue = a;
-        $("#tableAdded").html("");
-        $("#tableAdded").append("<p>Dodano tabele: </p>" + a)
-    });
 </script>
 
 
