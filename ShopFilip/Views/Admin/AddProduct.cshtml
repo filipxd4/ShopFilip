@@ -1,6 +1,8 @@
 ﻿@model ShopFilip.Models.Product
-@*<link href="https://cdnjs.cloudflare.com/ajax/libs/fotorama/4.6.4/fotorama.css" rel="stylesheet">*@
-@*<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />*@
+<link href="https://cdnjs.cloudflare.com/ajax/libs/fotorama/4.6.4/fotorama.css" rel="stylesheet">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
 <style>
     input[type="file"] {
         display: none;
@@ -13,7 +15,7 @@
         cursor: pointer;
     }
 
-    .modal-table {
+    .modal {
         overflow: visible;
         z-index: 3;
     }
@@ -178,12 +180,10 @@
                 </div>
                 <p><a class="button-style" href="#modal-open" id="add-table" rel="modal:open">Dodaj Tabele</a></p>
             </div>
-            <div class="form-group">
-                <input type="button" id="submit-form" class="btn btn-default" />
-            </div>
+
         </div>
     </form>
-    <div id="modal-open" class="modal-table">
+    <div id="modal-open" class="modal">
         <p>Wybierz już istniejącą tabele</p>
         <div id="photos">
 
@@ -191,6 +191,19 @@
         <a class="button-style" href="#" rel="modal:close" id="button-add-table">Add Table</a>
         <label class="label" for="add-new-table">Dodaj Nową tabele</label>
         <input type="file" id="add-new-table">
+    </div>
+
+    <div style="display:flex; width:100%">
+        <div style="width:50%;padding-top:10px;display:flex;justify-content:flex-start">
+            <button class="btn buyButton" type="submit" onclick="goBack()"  style="background-color:red;color:white">
+                Anuluj
+            </button>
+        </div>
+        <div style="width:50%;padding-top:10px;display:flex;justify-content:flex-end;">
+            <button class="btn buyButton" type="submit"  id="submit-form" style="background-color:green;color:white">
+                Zapisz!
+            </button>
+        </div>
     </div>
 </div>
 
@@ -206,6 +219,9 @@
         </div>
     </div>
 </div>
+<script src="~/js/CustomJavaScripts.js"></script>
+
+<script src="~/lib/jquery/dist/jquery.js"></script>
 <script>
     $("#submit-form").click(function () {
         SubmitForm()
@@ -360,7 +376,7 @@
         $.getJSON("/Admin/GetAllTables", function (response) {
             console.log(response)
             for (var i = 0; i < response.length; i++) {
-                var res = response[i].replace("C:\Users\Filip\source\repos\Shop\OnlineShop\ShopFilip\wwwroot", "");
+                var res = response[i].replace("C:\\Users\\Filip\\source\\repos\\Shop\\OnlineShop\\ShopFilip\\wwwroot", "");
                 $('div#photos').append('<label> <input type="radio" id="radio" name="test" value="' + res + '"  > <img  height="100px" src="' + res + '"></label>')
             }
         })
