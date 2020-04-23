@@ -76,6 +76,10 @@
         z-index: 9999;
         bottom: auto;
     }
+    .row {
+        border: solid gray 4px;
+        border-radius: 16px;
+    }
 </style>
 <div class="container">
     <h1>Add Product</h1>
@@ -193,7 +197,7 @@
         <input type="file" id="add-new-table">
     </div>
 
-    <div style="display:flex; width:100%">
+    <div style="display: flex; width: 100%">
         <div style="width:50%;padding-top:10px;display:flex;justify-content:flex-start">
             <button class="btn buyButton" type="submit" onclick="goBack()"  style="background-color:red;color:white">
                 Anuluj
@@ -220,7 +224,6 @@
     </div>
 </div>
 <script src="~/js/CustomJavaScripts.js"></script>
-
 <script src="~/lib/jquery/dist/jquery.js"></script>
 <script>
     $("#submit-form").click(function () {

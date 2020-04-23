@@ -16,7 +16,7 @@
     }
 
     .modal {
-        z-index:3;
+        z-index: 3;
         overflow: visible;
     }
     /* HIDE RADIO */
@@ -77,6 +77,10 @@
         transform: translate(-50%, -50%);
         z-index: 9999;
         bottom: auto;
+    }
+    .row {
+        border: solid gray 4px;
+        border-radius: 16px;
     }
 </style>
 <div class="container">
@@ -291,7 +295,6 @@
                 <p><a class="buttona" href="#ex1" id="bb" rel="modal:open">Dodaj Tabele</a></p>
             </div>
             <div class="form-group">
-                <input type="button" value="Zapisz" onClick='submitDetailsForm()' class="btn btn-default" />
             </div>
         </div>
     </form>
@@ -303,6 +306,16 @@
         <a class="buttona" href="#" rel="modal:close" id="ggg">Add Table</a>
         <label class="label" for="addNewToTable">Dodaj Nową tabele</label>
         <input type="file" name="pic" id="addNewToTable">
+    </div>
+    <div style="display:flex; width:100%">
+        <div style="width:50%;padding-top:10px;display:flex;justify-content:flex-start">
+            <button class="btn buyButton" type="submit" onclick="goBack()" style="background-color:red;color:white">
+                Anuluj
+            </button>
+        </div>
+        <div style="width:50%;padding-top:10px;display:flex;justify-content:flex-end;">
+            <input type="button" value="Zapisz" onClick='submitDetailsForm()' class="btn btn-default" style="background-color:green;color:white" />
+        </div>
     </div>
 </div>
 
@@ -319,7 +332,7 @@
         </div>
     </div>
 </div>
-
+<script src="~/js/CustomJavaScripts.js"></script>
 <script src="~/lib/jquery/dist/jquery.js"></script>
 <script>
     $('.aa').change(function () {
