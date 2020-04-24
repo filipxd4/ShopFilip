@@ -3,6 +3,9 @@
 @using Microsoft.AspNetCore.Identity
 @inject UserManager<ApplicationUser> UserManager
 @inject SignInManager<ApplicationUser> SignInManager
+@{
+    ViewData["Title"] = ViewContext.RouteData.Values["action"].ToString();
+}
 @if (SignInManager.IsSignedIn(User))
 {
     <div style="text-align:center; top: 50%; padding-top:20%;">

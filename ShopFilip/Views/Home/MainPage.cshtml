@@ -55,30 +55,6 @@
         }
     </div>
 </div>
-<script src="~/lib/jquery/dist/jquery.js"></script>
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script>
-    $(document).ready(function () {
-
-        eventThrottler();
-    });
-
-    function lazyLoad() {
-        $('.lazy-img').each(function () {
-            $(this).attr('src', $(this).data('src'));
-            $(this).removeClass('lazy-img');
-        })
-    };
-
-    var eventTimeout;
-    var eventThrottler = function () {
-        if (!eventTimeout) {
-            eventTimeout = setTimeout(function () {
-                eventTimeout = null;
-                lazyLoad();
-            }, 100);
-        }
-    };
-
-</script>
-
+@section Scripts {
+    <script src="~/js/MainPage.js"></script>
+}
