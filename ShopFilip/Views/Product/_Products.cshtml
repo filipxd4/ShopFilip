@@ -1,0 +1,31 @@
+﻿<div class="container">
+    <h1 style="text-align:center" id="title"></h1>
+    <div class="form-group">
+        <div class="searching-place">
+            <label for="fname">Wpisz fraze do szukania</label>
+            <input type="text" id="search" class="form-control" name="fname" style="display: inline-block;">
+        </div>
+        <div class="searching-place" style="align-content:flex-start">
+            <label>Wybierz swój rozmiar: </label>
+            <label>
+                <input type="checkbox" name="size" value="M"><span>M</span>
+            </label>
+            <label>
+                <input type="checkbox" name="size" value="L"><span>L</span>
+            </label>
+            <label>
+                <input type="checkbox" name="size" value="XL"><span>XL</span>
+            </label>
+            <label>
+                <input type="checkbox" name="size" value="XXL"><span>XXL</span>
+            </label>
+            <input type="button" id="search-btn" value="Szukaj!" asp-route-selected="" class="btn btn-default" />
+        </div>
+    </div>
+    <div class="container" id="products">
+
+    </div>
+    <div id="paged" class="col-8 offset-2">
+
+    </div>
+</div>

@@ -1,8 +1,8 @@
 ﻿@model ShopFilip.Models.Product
 @{
     Layout = "_Layout";
+    ViewData["Title"] = ViewContext.RouteData.Values["action"].ToString();
 }
-
 @section CssLinks{
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/fotorama/4.6.4/fotorama.css" rel="stylesheet">
@@ -72,9 +72,6 @@
         <img class="product-image" src="@Html.DisplayFor(modelItem => Model.Table)" alt="">
     </div>
 </div>
-
-
-
 @section Scripts {
     <script src="~/lib/jquery/dist/jquery.js"></script>
     <script>
@@ -112,6 +109,7 @@
             spinner.find("input").trigger("change");
         });
     });
+
     $(".input-radio").click(function() {
         var atrb = (this).value;
         var idofProd = @Model.Id;

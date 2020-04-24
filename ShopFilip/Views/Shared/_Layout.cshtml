@@ -84,7 +84,7 @@
             </main>
         </div>
         <footer id="footer">
-            &copy; 2019 - Filip Company - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy;  <span id="year"></span> - Filip Company
         </footer>
         <environment include="Development">
             <script src="~/lib/jquery/dist/jquery.js"></script>
@@ -104,8 +104,8 @@
                     integrity="sha256-E/V4cWE4qvAeO5MOhjtGtqDzPndRO1LBk8lJ/PR7CA4=">
             </script>
         </environment>
-        <script src="~/js/site.js" asp-append-version="true"></script>
         <script>
+            document.getElementById("year").innerHTML = new Date().getFullYear();
             $('.woman').hover(
                 function () {
                     $(".WomanMenu").addClass('show')

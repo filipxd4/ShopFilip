@@ -31,7 +31,6 @@
         data: JSON.stringify(myData),
         success: function (response) {
             if (response.success) {
-                console.log("siemano");
                 $('#modal-set-center').modal('show');
             }
         },

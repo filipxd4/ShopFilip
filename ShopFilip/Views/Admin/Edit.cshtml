@@ -1,6 +1,9 @@
 ﻿@model ShopFilip.Models.Product
 @section CssLinks {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/fotorama/4.6.4/fotorama.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
     <link rel="stylesheet" type="text/css" href="~/css/Add-edit-product.css">
 }
 @{
@@ -242,7 +245,7 @@
     </div>
 </div>
 <!-- Modal -->
-<div class="modal fade" id="modal-set-center">
+<div class="modal" id="modal-set-center">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-body">
@@ -253,10 +256,8 @@
     </div>
 </div>
 @section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
     <script src="~/js/CustomJavaScripts.js"></script>
-    <script src="~/lib/jquery/dist/jquery.js"></script>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/js/AddEditProduct.js"></script>
     <script src="~/js/EditProduct.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
 }
