@@ -8,16 +8,36 @@
         display: none;
     }
 
+    input[name="quantity"] {
+        width: 60px;
+        border: 4px solid gray;
+    }
+
+    #description {
+        border: 4px solid gray;
+    }
+
+    #name, #price {
+        border: 4px solid gray;
+    }
+
     .label {
         border: 1px solid #ccc;
         display: inline-block;
         padding: 6px 12px;
         cursor: pointer;
+        border-radius: 5px;
+        border: solid gray 4px;
     }
 
+        .label:hover {
+            color: white;
+            background-color: gray;
+        }
+
     .modal {
-        overflow: visible;
         z-index: 3;
+        overflow: visible;
     }
 
     #radio {
@@ -37,11 +57,11 @@
     }
 
     .button-style {
-        background-color: Crimson;
         border-radius: 5px;
-        color: white;
+        color: black;
         padding: .5em;
         text-decoration: none;
+        border: solid gray 4px;
     }
 
     #photo-min-product {
@@ -60,13 +80,20 @@
 
     #x {
         position: absolute;
-        background: red;
-        color: white;
+        background: white;
+        color: black;
         top: -10px;
         right: -10px;
         z-index: 1;
         cursor: pointer;
+        border: 4px solid #808080;
+        border-radius: 25px;
     }
+
+        #x:hover {
+            color: white;
+            background: #808080;
+        }
 
     #modal-set-center {
         position: absolute;
@@ -75,26 +102,53 @@
         transform: translate(-50%, -50%);
         z-index: 9999;
         bottom: auto;
+        padding-bottom: 0;
+        padding-top: 0;
     }
+
     .row {
         border: solid gray 4px;
         border-radius: 16px;
     }
+
+    #add-table:hover {
+        color: white;
+        background-color: gray;
+        text-decoration: none;
+    }
+
+    #cancel {
+        color: black;
+        border: solid red 4px;
+    }
+        #cancel:hover {
+            background-color: red;
+            color: white;
+        }
+    #submit-form {
+        color: black;
+        border: solid green 4px;
+    }
+
+        #submit-form:hover {
+            background-color: green;
+            color: white;
+        }
 </style>
 <div class="container">
-    <h1>Add Product</h1>
+    <h1>Dodaj nowy produkt</h1>
     <form>
         <div class="row">
             <div class="col-md-4">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input hidden id="idOfProoduct" value="" />
                 <div class="form-group">
-                    <label asp-for="Name" class="control-label"></label>
+                    <h4>Nazwa</h4>
                     <input asp-for="@Model.Name" id="name" class="form-control" />
                     <span asp-validation-for="Name" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="Price" class="control-label"></label>
+                    <h4>Cena</h4>
                     <input asp-for="Price" id="price" class="form-control" />
                     <span asp-validation-for="Price" class="text-danger"></span>
                 </div>
@@ -163,13 +217,13 @@
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <label asp-for="Description" class="control-label">Opis:</label>
+                    <h4>Opis</h4>
                     <textarea asp-for="Description" id="description" class="form-control" rows="5"></textarea>
                     <span asp-validation-for="Description" class="text-danger"></span>
                 </div>
 
                 <div class="form-group">
-                    <label class="label" for="gallery-photo-add">Dodaj Zdjęcia:</label>
+                    <label class="label" for="gallery-photo-add">Dodaj zdjęcia</label>
                     <input type="file" multiple id="gallery-photo-add">
                     <div class="gallery">
 
@@ -182,7 +236,7 @@
 
                     </div>
                 </div>
-                <p><a class="button-style" href="#modal-open" id="add-table" rel="modal:open">Dodaj Tabele</a></p>
+                <p><a class="button-style" href="#modal-open" id="add-table" rel="modal:open">Dodaj tabele</a></p>
             </div>
 
         </div>
@@ -199,12 +253,12 @@
 
     <div style="display: flex; width: 100%">
         <div style="width:50%;padding-top:10px;display:flex;justify-content:flex-start">
-            <button class="btn buyButton" type="submit" onclick="goBack()"  style="background-color:red;color:white">
+            <button class="btn" id="cancel" type="submit" onclick="goBack()">
                 Anuluj
             </button>
         </div>
         <div style="width:50%;padding-top:10px;display:flex;justify-content:flex-end;">
-            <button class="btn buyButton" type="submit"  id="submit-form" style="background-color:green;color:white">
+            <button class="btn" type="submit"  id="submit-form">
                 Zapisz!
             </button>
         </div>

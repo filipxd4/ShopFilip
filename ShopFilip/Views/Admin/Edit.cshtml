@@ -8,12 +8,32 @@
         display: none;
     }
 
+    input[name="quantity"] {
+        width: 60px;
+        border: 4px solid gray;
+    }
+
+    #description {
+        border: 4px solid gray;
+    }
+
+    #name, #price {
+        border: 4px solid gray;
+    }
+
     .label {
         border: 1px solid #ccc;
         display: inline-block;
         padding: 6px 12px;
         cursor: pointer;
+        border-radius: 5px;
+        border: solid gray 4px;
     }
+
+        .label:hover {
+            color: white;
+            background-color: gray;
+        }
 
     .modal {
         z-index: 3;
@@ -39,11 +59,11 @@
     }
 
     .button-style {
-        background-color: Crimson;
         border-radius: 5px;
-        color: white;
+        color: black;
         padding: .5em;
         text-decoration: none;
+        border: solid gray 4px;
     }
 
     #photo-min-product {
@@ -62,13 +82,20 @@
 
     #x {
         position: absolute;
-        background: red;
-        color: white;
+        background: white;
+        color: black;
         top: -10px;
         right: -10px;
         z-index: 1;
         cursor: pointer;
+        border: 4px solid #808080;
+        border-radius: 25px;
     }
+
+        #x:hover {
+            color: white;
+            background: #808080;
+        }
 
     #modal-set-center {
         position: absolute;
@@ -77,12 +104,40 @@
         transform: translate(-50%, -50%);
         z-index: 9999;
         bottom: auto;
+        padding-bottom: 0;
+        padding-top: 0;
     }
 
     .row {
         border: solid gray 4px;
         border-radius: 16px;
     }
+
+    #add-table:hover {
+        color: white;
+        background-color: gray;
+        text-decoration: none;
+    }
+
+    #cancel {
+        color: black;
+        border: solid red 4px;
+    }
+
+        #cancel:hover {
+            background-color: red;
+            color: white;
+        }
+
+    #submit-form {
+        color: black;
+        border: solid green 4px;
+    }
+
+        #submit-form:hover {
+            background-color: green;
+            color: white;
+        }
 </style>
 <div class="container">
     <h1>Add ProductsData</h1>
@@ -92,18 +147,18 @@
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input hidden id="idOfProoduct" value="@Model.Id" />
                 <div class="form-group">
-                    <label asp-for="Name" class="control-label"></label>
+                    <label asp-for="Name" class="control-label">Nazwa</label>
                     <input asp-for="@Model.Name" id="name" class="form-control" />
                     <span asp-validation-for="Name" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="Price" class="control-label"></label>
+                    <label asp-for="Price" class="control-label">Cena w zł</label>
                     <input asp-for="Price" id="price" class="form-control" />
                     <span asp-validation-for="Price" class="text-danger"></span>
                 </div>
                 <div class="form-group">
                     <label class="container">
-                        Man
+                        Mężczyzna
                         @if (Model.Gender == "man")
                         {
                             <input type="radio" checked="checked" name="gender" value="man">
@@ -115,7 +170,7 @@
                         <span class="checkmark"></span>
                     </label>
                     <label class="container">
-                        Woman
+                        Kobieta
                         @if (Model.Gender == "woman")
                         {
                             <input type="radio" checked="checked" name="gender" value="woman">
@@ -265,13 +320,13 @@
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                    <label asp-for="Description" class="control-label">Comment:</label>
+                    <label asp-for="Description" class="control-label">Opis:</label>
                     <textarea asp-for="Description" id="description" class="form-control" rows="5" id="comment"></textarea>
                     <span asp-validation-for="Description" class="text-danger"></span>
                 </div>
 
                 <div class="form-group">
-                    <label class="label" for="gallery-photo-add">Dodaj photo-of-productęcia</label>
+                    <label class="label" for="gallery-photo-add">Dodaj zdjęcia</label>
                     <input type="file" name="pic" multiple id="gallery-photo-add">
 
                     <div class="gallery" id="gal">
@@ -293,7 +348,7 @@
                         }
                     </div>
                 </div>
-                <p><a class="button-style" href="#ex1" id="add-table" rel="modal:open">Dodaj Tabele</a></p>
+                <p><a class="button-style" href="#ex1" id="add-table" rel="modal:open">Zmień Tabelę</a></p>
             </div>
             <div class="form-group">
             </div>
@@ -310,12 +365,12 @@
     </div>
     <div style="display:flex; width:100%">
         <div style="width:50%;padding-top:10px;display:flex;justify-content:flex-start">
-            <button class="btn buyButton" type="submit" onclick="goBack()" style="background-color:red;color:white">
+            <button class="btn" id="cancel" type="submit" onclick="goBack()">
                 Anuluj
             </button>
         </div>
         <div style="width:50%;padding-top:10px;display:flex;justify-content:flex-end;">
-            <input type="button" value="Zapisz" id="submit-form"  class="btn btn-default" style="background-color:green;color:white" />
+            <input type="button" value="Zapisz" id="submit-form" class="btn btn-default"/>
         </div>
     </div>
 </div>
@@ -325,11 +380,9 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-body">
-                <p>Sucess!&hellip;</p>
+                <p style="text-align:center">Zaktualizowano pomyślnie!</p>
             </div>
-            <div class="modal-footer">
-                <button type="button" onclick="location.href='@Url.Action("Index", "Admin")'" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
+            <button type="button" onclick="location.href='@Url.Action("Index", "Admin")'" class="btn btn-default" data-dismiss="modal">Zamknij i zapisz</button>
         </div>
     </div>
 </div>
@@ -353,11 +406,11 @@
 
     $('body').on('click', '#x', function () {
         $(this).closest('div').remove();
-        var removePhoto  = $(this).closest('div').children().eq(1).attr("src")
+        var removePhoto = $(this).closest('div').children().eq(1).attr("src")
         $.ajax({
             url: "/Admin/RemoveFromDatabase",
             type: "POST",
-            data: { 'path': removePhoto  },
+            data: { 'path': removePhoto },
             dataType: 'text',
             success: function () {
                 if (response.success) {

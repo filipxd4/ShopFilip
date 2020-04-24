@@ -38,8 +38,11 @@ namespace OnlineShop.Controllers
         public IActionResult Index()
         {
             var cart = SesionHelper.GetObjectFromJson<List<Item>>(HttpContext.Session, "cart");
-            ViewBag.cart = cart;
-            ViewBag.total = cart.Sum(item => item.Product.Price * item.Quantity);
+            if (cart!=null)
+            {
+                ViewBag.cart = cart;
+                ViewBag.total = cart.Sum(item => item.Product.Price * item.Quantity);
+            }
             return View();
         }
 
