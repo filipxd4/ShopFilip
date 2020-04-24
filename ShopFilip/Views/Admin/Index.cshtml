@@ -1,5 +1,6 @@
 ﻿@{
     Layout = "_Layout_Dashboard";
+    ViewData["Title"] = "Admin Panel";
 }
 @model IEnumerable<ShopFilip.Models.OrderChart>
 <div class="container-fluid">
@@ -30,7 +31,7 @@
                             <span data-feather="plus-circle"></span>
                             Dodaj nowy produkt
                         </a>
-                    </li> 
+                    </li>
                     <li class="nav-item">
                         <a asp-controller="Admin" asp-action="GetCustomers" class="nav-link">
                             <span data-feather="users"></span>
@@ -42,7 +43,7 @@
                 <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
                     <span>Saved reports</span>
                     <a class="d-flex align-items-center text-muted" href="#">
-                        
+
                     </a>
                 </h6>
                 <ul class="nav flex-column mb-2 ">
@@ -97,7 +98,7 @@
 <script>
     var lab = [];
     var money = [];
-  
+
     var ctx = document.getElementById("myChart");
     $.ajax({
         url: '/Admin/GetOrdersInfo',
@@ -137,6 +138,6 @@
             });
         }
     });
-   
+
 </script>
 

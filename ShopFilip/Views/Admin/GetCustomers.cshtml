@@ -2,6 +2,7 @@
 @model List<ApplicationUser>
 @{
     Layout = "_Layout_Dashboard";
+    ViewData["Title"] = ViewContext.RouteData.Values["action"].ToString();
 }
 <div class="container">
     <h2>Klienci</h2>

@@ -1,5 +1,6 @@
 ﻿@{
     Layout = "_Layout_Dashboard";
+    ViewData["Title"] = ViewContext.RouteData.Values["action"].ToString();
 }
 @model IEnumerable<ShopFilip.Models.AllUsersProducts>
 <div class="container">

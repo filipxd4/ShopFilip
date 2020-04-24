@@ -3,6 +3,9 @@
 @{
     ViewData["Title"] = "Delete";
 }
+@{
+    ViewData["Title"] = ViewContext.RouteData.Values["action"].ToString();
+}
 <div class="container">
     <h3>Czy napewno chcesz usunąć ten przedmiot?</h3>
     <div>

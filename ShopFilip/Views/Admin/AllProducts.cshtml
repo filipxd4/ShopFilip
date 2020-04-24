@@ -2,6 +2,9 @@
 @{
     Layout = "_Layout_Dashboard";
 }
+@{
+    ViewData["Title"] = ViewContext.RouteData.Values["action"].ToString();
+}
 <div class="container">
     <h2>Wszystkie produkty</h2>
     <div class="table-responsive">
@@ -32,7 +35,7 @@
                             @foreach (var itema in item.ProductAtribute)
                             {
                                 <span>Rozmiar: @itema.Value</span>
-                                <span>Ilość: @itema.Quantity</span><br/>
+                                <span>Ilość: @itema.Quantity</span><br />
                             }
                         </td>
                         <td>
