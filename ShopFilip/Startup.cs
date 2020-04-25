@@ -30,7 +30,6 @@ namespace ShopFilip
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
             services.AddDbContext<EfDbContext>(options =>options.UseSqlServer(Configuration.GetConnectionString("ShopFilip")));
-
             services.AddSession();
             services.AddIdentity<ApplicationUser, ApplicationRole>(
                 options => options.Stores.MaxLengthForKeys = 128)

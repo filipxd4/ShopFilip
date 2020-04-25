@@ -1,9 +1,5 @@
 ﻿@model IEnumerable<ShopFilip.Models.Product>
-@{
-    Layout = "_Layout";
-}
 <h2>@ViewData["Genre"]</h2>
-
 @foreach (var item in Model)
 {
     <div class="productThumbnailContainer col-sm-4" data-productid="@item.Id">
