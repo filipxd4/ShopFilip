@@ -30,7 +30,7 @@
     <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
         <a style="background-color:white;color:black; border:black solid 1px"class="navbar-brand col-sm-3 col-md-2 mr-0" asp-controller="Home" asp-action="MainPage">Strona główna</a>
         <a class="navbar-brand col-sm-3 col-md-2 mr-0" asp-controller="Admin" asp-action="Index">FW Admin Panel</a>
-        <form class="form-inline my-2 my-lg-0" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("MainPage", "Account", new { area = "" })" method="post" id="logoutForm">
+        <form class="form-inline my-2 my-lg-0" asp-area="" asp-controller="Account" asp-action="Logout"   asp-route-returnUrl="@Url.Action("MainPage", "Account", new { area = "" })" method="post" id="logoutForm">
             <ul class="navbar-nav px-3">
                 <li class="nav-item text-nowrap">
                     <button type="submit" class="btn btn-outline-success my-2 my-sm-0">Logout</button>

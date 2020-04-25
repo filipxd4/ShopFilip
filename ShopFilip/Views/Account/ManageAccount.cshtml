@@ -12,12 +12,12 @@
 <div class="container" style="display:flex">
     <div class="col-md-6" id="manage-form">
         <h1 style="text-align:center">Dostępne akcje</h1>
-        <form id="manage-form" method="get" asp-controller="Account" asp-action="Edit" asp-route-id="@UserManager.GetUserId(User)">
+        <form id="manage-form" method="get" asp-controller="Account" asp-action="Edit" asp-route-userId="@UserManager.GetUserId(User)">
             <button class="btn button-manage-account" type="submit">
                 Edytuj dane ✏️
             </button>
         </form>
-        <form id="manage-form" method="get" asp-controller="Account" asp-action="MyOrders" asp-route-id="@UserManager.GetUserId(User)">
+        <form id="manage-form" method="get" asp-controller="Account" asp-action="UserOrders" asp-route-id="@UserManager.GetUserId(User)">
             <button class="btn button-manage-account" type="submit">
                 Twoje zamówienia! 🎁
             </button>

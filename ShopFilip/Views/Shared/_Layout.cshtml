@@ -53,13 +53,13 @@
                     </ul>
                     @if (SignInManager.IsSignedIn(User))
                     {
-                        <form class="form-inline my-2 my-lg-0" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("MainPage", "Account", new { area = "" })" method="post" id="logoutForm">
+                        <form class="form-inline my-2 my-lg-0" asp-area="" asp-controller="Account" asp-action="Logout"  asp-route-returnUrl="@Url.Action("MainPage", "Account", new { area = "" })" method="post" id="logoutForm">
                             <ul class="nav navbar-nav navbar-right">
                                 <li>
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Cart" asp-action="Index" title="ShoppingCart">🛒</a>
                                 </li>
                                 <li>
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="ManageAccount" asp-route-id="@UserManager.GetUserId(User)" title="Manage">Hello @UserManager.GetUserName(User)!</a>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="ManageAccount" title="Manage">Hello @UserManager.GetUserName(User)!</a>
                                 </li>
                                 <li>
                                     <button type="submit" class="btn btn-outline-success my-2 my-sm-0">Logout</button>

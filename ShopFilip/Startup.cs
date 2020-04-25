@@ -6,7 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using ShopFilip.DataBase;
 using ShopFilip.IdentityModels;
+using ShopFilip.Interfaces;
 using ShopFilip.Migrations;
 using ShopFilip.Models;
 
@@ -29,24 +31,27 @@ namespace ShopFilip
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
+
+            services.AddScoped<IOrderLogic, OrderLogic>();
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = $"/account/login";
+                options.LogoutPath = $"/account/Logout";
+            });
+
             services.AddDbContext<EfDbContext>(options =>options.UseSqlServer(Configuration.GetConnectionString("ShopFilip")));
             services.AddSession();
-            services.AddIdentity<ApplicationUser, ApplicationRole>(
-                options => options.Stores.MaxLengthForKeys = 128)
-                .AddEntityFrameworkStores<EfDbContext>()
-                .AddDefaultUI()
-                .AddDefaultTokenProviders();
+            services.AddIdentity<ApplicationUser, ApplicationRole>(options => options.Stores.MaxLengthForKeys = 128).AddEntityFrameworkStores<EfDbContext>().AddDefaultTokenProviders();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
-        public void Configure(IApplicationBuilder app,
-           IHostingEnvironment env, EfDbContext context,
-           RoleManager<ApplicationRole> roleManager,
-           UserManager<ApplicationUser> userManager)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, EfDbContext context,RoleManager<ApplicationRole> roleManager,UserManager<ApplicationUser> userManager)
         {
             if (env.IsDevelopment())
             {
+                app.UseExceptionHandler("/Home/Error");
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
                 app.UseStaticFiles();

@@ -119,18 +119,29 @@ namespace OnlineShop.Controllers
             return View();
         }
 
+        private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
+
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> myAction(string id, int Price, string Ip)
+        public async Task<IActionResult> myAction(int Price, string Ip,string returnurl="")
         {
-            List<Item> cart = SesionHelper.GetObjectFromJson<List<Item>>(HttpContext.Session, "cart");
-            if (id == null)
+            var usaer = await GetCurrentUserAsync();
+            var useraId = usaer?.Id;
+            if (returnurl=="")
             {
-                return NotFound();
+                List<Item> cart = SesionHelper.GetObjectFromJson<List<Item>>(HttpContext.Session, "cart");
+                if (useraId == null)
+                {
+                    return NotFound();
+                }
+                var userProp = await _context.Users.FindAsync(useraId);
+                await GetAccessTokenAsync(userProp, Price, cart, Ip);
+                return Redirect(Uri);
             }
-            var userProp = await _context.Users.FindAsync(id);
-            await GetAccessTokenAsync(userProp, Price, cart, Ip);
-            return Redirect(Uri);
+            else
+            {
+                return RedirectToAction("Index");
+            }
         }
 
         [Authorize]

@@ -11,6 +11,7 @@ using System.Net.Http;
 using static ShopFilip.Helpers.DataPayU;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Authorization;
+using ShopFilip.Interfaces;
 
 namespace ShopFilip.Controllers
 {
@@ -19,12 +20,16 @@ namespace ShopFilip.Controllers
         private UserManager<ApplicationUser> _userManager;
         private SignInManager<ApplicationUser> _signManager;
         private EfDbContext _context;
+        private IOrderLogic _orderLogic;
 
-        public AccountController(EfDbContext context, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signManager)
+        private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
+
+        public AccountController(EfDbContext context, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signManager, IOrderLogic orderLogic)
         {
             _context = context;
             _userManager = userManager;
             _signManager = signManager;
+            _orderLogic = orderLogic;
         }
 
         [HttpGet]
@@ -56,13 +61,14 @@ namespace ShopFilip.Controllers
                     return RedirectToAction("MainPage", "Home");
                 }
             }
+            ModelState.AddModelError("", "Żle wpisane dane.");
             return View();
         }
 
         public IActionResult MainPage()
         {
             if (User.IsInRole("Admin"))
-                return this.RedirectToAction("Index", "Admin");
+                return RedirectToAction("Index", "Admin");
             else
                 return RedirectToAction("MainPage", "Home");
         }
@@ -71,7 +77,6 @@ namespace ShopFilip.Controllers
         {
             return View();
         }
-
 
         [HttpGet]
         [Authorize]
@@ -82,54 +87,12 @@ namespace ShopFilip.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> MyOrders(string id)
+        public async Task<IActionResult> UserOrders()
         {
-            var aaa = await _userManager.FindByIdAsync(id);
-            var orders = _context.Orders.Where(x => x.ApplicationUser.Id == id).Include(c => c.Products);
-
-            List<OrderProduct> orderProd = new List<OrderProduct>();
-            foreach (var item in orders)
-            {
-                string status = string.Empty;
-                using (var httpClient = new HttpClient())
-                {
-                    using (var request = new HttpRequestMessage(new HttpMethod("GET"), "https://private-anon-8f04126df6-payu21.apiary-proxy.com/api/v2_1/orders/" + item.OrderId))
-                    {
-                        request.Headers.TryAddWithoutValidation("Authorization", "Bearer 3e5cac39-7e38-4139-8fd6-30adc06a61bd");
-                        var response = await httpClient.SendAsync(request);
-                        var jsonString = await response.Content.ReadAsStringAsync();
-                        var objResponse1 = JsonConvert.DeserializeObject<RootObject2>(jsonString);
-                        status = objResponse1.status.statusCode;
-                    }
-                }
-                if (item.StatusOrder == "New" && status == "SUCCESS")
-                {
-                    item.StatusOrder = "Paid";
-                    await _userManager.UpdateAsync(aaa);
-                }
-                List<PoductQuantityAtribute> prQ = new List<PoductQuantityAtribute>();
-                List<Product> productList = new List<Product>();
-                foreach (var itemo in item.Products)
-                {
-                    try
-                    {
-                        Product product = _context.ProductsData.Where(x => x.Id == itemo.IdOfProduct).Include(x => x.Photos).First();
-                        if (!productList.Contains(product))
-                        {
-                            productList.Add(product);
-                        }
-                        prQ.Add(new PoductQuantityAtribute(productList, itemo.Quantity, itemo.Value));
-                    }
-                    catch
-                    {
-                        //throw new InvalidOperationException("Brak produktu");
-                    }
-                }
-                DateTime dateTime = DateTime.Parse(item.DateOfOrder);
-                orderProd.Add(new OrderProduct(prQ, dateTime, item.OrderId, item.StatusOrder));
-            }
-            var sortedOrderList = orderProd.OrderByDescending(x => x.OrderDate);
-            return View(sortedOrderList);
+            var usaer = await GetCurrentUserAsync();
+            var userId = usaer?.Id;
+            var order = await _orderLogic.GetUserOrders(userId);
+            return View(order);
         }
 
         [HttpGet]
@@ -174,28 +137,31 @@ namespace ShopFilip.Controllers
             return View(model);
         }
 
-        public async Task<IActionResult> Index(string id)
+        public async Task<IActionResult> Index(string userId)
         {
-            var user = await _userManager.FindByIdAsync(id);
+            var user = await _userManager.FindByIdAsync(userId);
             ViewBag.Email = user.Email;
             return View();
         }
 
+
         [Authorize]
-        public async Task<IActionResult> ManageAccount(string id)
+        public async Task<IActionResult> ManageAccount()
         {
+            var usaer = await GetCurrentUserAsync();
+            var useraId = usaer?.Id;
             bool isAuthenticated = User.Identity.IsAuthenticated;
             if (isAuthenticated)
             {
                 ApplicationUser user;
                 if (User.IsInRole("Admin"))
                 {
-                    user = await _userManager.FindByIdAsync(id);
+                    user = await _userManager.FindByIdAsync(useraId);
                     ViewBag.Role = "Admin";
                 }
                 else
                 {
-                    user = await _userManager.FindByIdAsync(id);
+                    user = await _userManager.FindByIdAsync(useraId);
                     ViewBag.Role = "User";
                 }
                 return View(user);
@@ -208,26 +174,22 @@ namespace ShopFilip.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> Edit(string id)
+        public async Task<IActionResult> Edit(string userId)
         {
-            if (id == null)
-            {
+            if (userId == null)
                 return ErrorPage();
-            }
 
-            var user = await _context.Users.FindAsync(id);
+            var user = await _context.Users.FindAsync(userId);
             if (user == null)
-            {
                 return ErrorPage();
-            }
             return View(user);
         }
 
         [HttpPost]
         [Authorize]
-        public async Task<IActionResult> Edit(string id, Register model)
+        public async Task<IActionResult> Edit(string userId, Register model)
         {
-            var user = await _userManager.FindByIdAsync(id);
+            var user = await _userManager.FindByIdAsync(userId);
             user.Email = model.Email;
             user.Street = model.Street;
             user.PostalCode = model.PostalCode;
@@ -235,7 +197,7 @@ namespace ShopFilip.Controllers
             user.PhoneNumber = model.PhoneNumber;
             user.Street = model.Street;
             await _userManager.UpdateAsync(user);
-            return RedirectToAction("Index", new { id });
+            return RedirectToAction("Index", new { userId });
         }
     }
 }

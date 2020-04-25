@@ -54,6 +54,13 @@
                                     <option value="Sent">Sent</option>
                                     <option value="Paid">Paid</option>
                                 }
+                                else if (itemo.OrderStatus == "Cancel")
+                                {
+                                    <option selected="selected" value="@itemo.OrderStatus">@itemo.OrderStatus</option>
+                                    <option value="SUCCESS">SUCCESS</option>
+                                    <option value="Sent">Sent</option>
+                                    <option value="Paid">Paid</option>
+                                }
                             </select>
 
                             @foreach (var itema in itemo.PoductQuantityAtribute)
