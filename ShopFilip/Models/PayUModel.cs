@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ShopFilip.Helpers
+namespace ShopFilip.Models
 {
-    public class DataPayU
+    public class PayUModel
     {
-        public class RootObject2
+        public class AccessModel
         {
             public string access_token { get; set; }
             public string token_type { get; set; }
@@ -24,7 +24,7 @@ namespace ShopFilip.Helpers
             public string statusDesc { get; set; }
         }
 
-        public class RootObject
+        public class StatusModel
         {
             public string orderId { get; set; }
             public Status status { get; set; }

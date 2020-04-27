@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using ShopFilip.DataBase;
+using ShopFilip.ShopLogic;
 using ShopFilip.IdentityModels;
 using ShopFilip.Interfaces;
 using ShopFilip.Migrations;
@@ -33,6 +33,7 @@ namespace ShopFilip
             });
 
             services.AddScoped<IOrderLogic, OrderLogic>();
+            services.AddScoped<IPayULogic, PayULogic>();
 
             services.ConfigureApplicationCookie(options =>
             {

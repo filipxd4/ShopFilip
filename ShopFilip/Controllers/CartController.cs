@@ -9,7 +9,7 @@ using ShopFilip.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using System.Net.Http;
 using System.Text;
-using static ShopFilip.Helpers.DataPayU;
+using static ShopFilip.Helpers.PayUModel;
 using Newtonsoft.Json;
 using System.Net;
 using ShopFilip.IdentityModels;

@@ -9,19 +9,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using static ShopFilip.Helpers.DataPayU;
 
-namespace ShopFilip.DataBase
+namespace ShopFilip.ShopLogic
 {
     public class OrderLogic : IOrderLogic
     {
         private UserManager<ApplicationUser> _userManager;
         private EfDbContext _context;
+        private IPayULogic _payULogic;
 
-        public OrderLogic(UserManager<ApplicationUser> UserManager, EfDbContext Context)
+        public OrderLogic(UserManager<ApplicationUser> UserManager, EfDbContext Context,IPayULogic PayULogic)
         {
             _userManager = UserManager;
             _context = Context;
+            _payULogic = PayULogic;
         }
 
         public async Task<List<OrderProduct>> GetUserOrders(string idOfUser)
@@ -31,18 +32,8 @@ namespace ShopFilip.DataBase
             List<OrderProduct> orderProd = new List<OrderProduct>();
             foreach (var item in orders)
             {
-                string status = string.Empty;
-                using (var httpClient = new HttpClient())
-                {
-                    using (var request = new HttpRequestMessage(new HttpMethod("GET"), "https://private-anon-8f04126df6-payu21.apiary-proxy.com/api/v2_1/orders/" + item.OrderId))
-                    {
-                        request.Headers.TryAddWithoutValidation("Authorization", "Bearer 3e5cac39-7e38-4139-8fd6-30adc06a61bd");
-                        var response = await httpClient.SendAsync(request);
-                        var jsonString = await response.Content.ReadAsStringAsync();
-                        var objResponse1 = JsonConvert.DeserializeObject<RootObject2>(jsonString);
-                        status = objResponse1.status.statusCode;
-                    }
-                }
+                string status = await _payULogic.GetStatusOfOrderAsync(idOfUser);
+                
                 if (item.StatusOrder == "New" && status == "SUCCESS")
                 {
                     item.StatusOrder = "Paid";

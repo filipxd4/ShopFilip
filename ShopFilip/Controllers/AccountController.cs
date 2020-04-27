@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using ShopFilip.Models;
-using ShopFilip.IdentityModels;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using System.Net.Http;
-using static ShopFilip.Helpers.DataPayU;
-using Newtonsoft.Json;
-using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using ShopFilip.IdentityModels;
 using ShopFilip.Interfaces;
+using ShopFilip.Models;
+using System.Threading.Tasks;
 
 namespace ShopFilip.Controllers
 {
@@ -89,17 +82,14 @@ namespace ShopFilip.Controllers
         [Authorize]
         public async Task<IActionResult> UserOrders()
         {
-            var usaer = await GetCurrentUserAsync();
-            var userId = usaer?.Id;
-            var order = await _orderLogic.GetUserOrders(userId);
-            return View(order);
+            var user = await GetCurrentUserAsync();
+            return View(await _orderLogic.GetUserOrders(user?.Id));
         }
 
         [HttpGet]
         public IActionResult Login(string returnUrl = "")
         {
-            var model = new Login { ReturnUrl = returnUrl };
-            return View(model);
+            return View(new Login { ReturnUrl = returnUrl });
         }
 
         [HttpPost]
@@ -107,7 +97,7 @@ namespace ShopFilip.Controllers
         public async Task<IActionResult> Logout()
         {
             await _signManager.SignOutAsync();
-            return RedirectToAction("MainPage", "Account");
+            return RedirectToAction("MainPage", nameof(AccountController));
         }
 
         [HttpPost]
