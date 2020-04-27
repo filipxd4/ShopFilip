@@ -15,5 +15,6 @@ namespace ShopFilip.IdentityModels
         public string Town { get; set; }
         public string PostalCode { get; set; }
         public ICollection<Order> OrdersList { get; set; }
+
     }
 }

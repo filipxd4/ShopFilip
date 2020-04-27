@@ -9,12 +9,13 @@ using ShopFilip.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using System.Net.Http;
 using System.Text;
-using static ShopFilip.Helpers.PayUModel;
 using Newtonsoft.Json;
 using System.Net;
 using ShopFilip.IdentityModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using static ShopFilip.Models.PayUModel;
+using ShopFilip.Interfaces;
 
 namespace OnlineShop.Controllers
 {
@@ -23,15 +24,14 @@ namespace OnlineShop.Controllers
     {
         private EfDbContext _context;
         private UserManager<ApplicationUser> _userManager;
-
-        public string accessToken { get; set; }
-        public string Uri { get; set; }
+        private IPayULogic _payULogic;
         public string OrderId = "";
 
-        public CartController(EfDbContext context, UserManager<ApplicationUser> userManager)
+        public CartController(EfDbContext context, UserManager<ApplicationUser> userManager,IPayULogic PayULogic)
         {
             _context = context;
             _userManager = userManager;
+            _payULogic = PayULogic;
         }
 
         [Route("index")]
@@ -135,39 +135,13 @@ namespace OnlineShop.Controllers
                     return NotFound();
                 }
                 var userProp = await _context.Users.FindAsync(useraId);
-                await GetAccessTokenAsync(userProp, Price, cart, Ip);
-                return Redirect(Uri);
+                var accessToken = await _payULogic.GetAccessTokenAsync();
+                var uriToPayU = await Order(userProp, Price, cart, Ip, accessToken);
+                return Redirect(uriToPayU);
             }
             else
             {
                 return RedirectToAction("Index");
-            }
-        }
-
-        [Authorize]
-        public async Task GetAccessTokenAsync(ApplicationUser user, int Price, List<Item> itemFromCart,string ip)
-        {
-            using (var httpClient = new HttpClient())
-            {
-                using (var request = new HttpRequestMessage(new HttpMethod("POST"), "https://secure.payu.com/pl/standard/user/oauth/authorize"))
-                {
-                    request.Headers.TryAddWithoutValidation("Host", "secure.payu.com");
-                    request.Content = new StringContent("grant_type=client_credentials&client_id=145227&client_secret=12f071174cb7eb79d4aac5bc2f07563f", Encoding.UTF8, "application/x-www-form-urlencoded");
-                    try
-                    {
-                        var response = await httpClient.SendAsync(request);
-                        var jsonString = await response.Content.ReadAsStringAsync();
-                        var objResponse1 = JsonConvert.DeserializeObject<RootObject2>(jsonString);
-                        accessToken = objResponse1.access_token;
-                        await Order(user, Price, itemFromCart,ip);
-                        Response.Redirect(Uri);
-                    }
-                    catch (Exception)
-                    {
-                        ErrorPage();
-                    }
-
-                }
             }
         }
 
@@ -182,7 +156,7 @@ namespace OnlineShop.Controllers
             return View();
         }
 
-        public async Task Order(ApplicationUser user, int price, List<Item> itemfromCart, string ip)
+        public async Task<string> Order(ApplicationUser user, int price, List<Item> itemfromCart, string ip,string accessToken)
         {
             string ProperPrice = (price*100).ToString();
             var handler = new HttpClientHandler()
@@ -232,10 +206,10 @@ namespace OnlineShop.Controllers
                     request.Content = new StringContent(stringToPayU, Encoding.UTF8, "application/json");
                     var response = await httpClient.SendAsync(request);
                     var jsonString = await response.Content.ReadAsStringAsync();
-                    var objResponse1 = JsonConvert.DeserializeObject<RootObject>(jsonString);
-                    Uri = objResponse1.redirectUri;
+                    var objResponse1 = JsonConvert.DeserializeObject<StatusModel>(jsonString);
                     OrderId = objResponse1.orderId;
                     await SaveOrderToDatabase(OrderId, itemfromCart, user, price.ToString());
+                    return objResponse1.redirectUri;
                 }
             }
         }

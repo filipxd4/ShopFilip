@@ -8,5 +8,6 @@ namespace ShopFilip.Interfaces
     public interface IPayULogic
     {
         Task<string> GetStatusOfOrderAsync(string orderId);
+        Task<string> GetAccessTokenAsync();
     }
 }

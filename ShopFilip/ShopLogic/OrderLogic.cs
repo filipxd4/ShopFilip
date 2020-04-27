@@ -8,7 +8,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
+using static ShopFilip.Models.PayUModel;
 
 namespace ShopFilip.ShopLogic
 {
@@ -33,7 +35,6 @@ namespace ShopFilip.ShopLogic
             foreach (var item in orders)
             {
                 string status = await _payULogic.GetStatusOfOrderAsync(idOfUser);
-                
                 if (item.StatusOrder == "New" && status == "SUCCESS")
                 {
                     item.StatusOrder = "Paid";
@@ -63,5 +64,7 @@ namespace ShopFilip.ShopLogic
             var sortedOrderList = orderProd.OrderByDescending(x => x.OrderDate);
             return orderProd;
         }
+        
+
     }
 }
