@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ShopFilip.IdentityModels;
+using ShopFilip.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,5 +11,6 @@ namespace ShopFilip.Interfaces
     {
         Task<string> GetStatusOfOrderAsync(string orderId);
         Task<string> GetAccessTokenAsync();
+        Task<string> GeneratePayLink(ApplicationUser user, int price, List<Item> itemfromCart, string ip, string accessToken);
     }
 }

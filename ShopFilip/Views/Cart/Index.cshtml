@@ -54,32 +54,15 @@
                 </button>
             </div>
             <div style="width:50%;padding-top:10px;display:flex;justify-content:flex-end">
-                @*@if (SignInManager.IsSignedIn(User))
-                {*@
-                    <form method="get" asp-controller="Cart" asp-action="myAction" asp-route-returnurl="cart/index">
-                        <input type="hidden" name="Price" value="@ViewBag.total" />
-                        <input type="hidden" id="ip" name="Ip" value="@HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString()" />
-                        <button class="btn buyButton" type="submit">
-                            <span class="price">💰</span>
-                            <span class="shopping-cart"><a class="fa fa-shopping-cart" aria-hidden="true">🛍️</a></span>
-                            <a class="cart-btn" href="#">Buy!</a>
-                        </button>
-                    </form>
-                @*}
-                else
-                {
-                    <form method="get" asp-controller="Account" asp-action="Login">
-                        <input type="hidden" name="Price" value="@ViewBag.total" />
-                        <input type="hidden" name="Id" value="@UserManager.GetUserId(User)" />
-                        <input type="hidden" id="ip" name="Ip" value="@HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString()" />
-                        <input type="hidden" name="BoughtProducts" value="@ViewBag.cart" />
-                        <button class="btn buyButton" type="submit">
-                            <span class="price">💰</span>
-                            <span class="shopping-cart"><i class="fa fa-shopping-cart" aria-hidden="true">🛒</i></span>
-                            Buy!
-                        </button>
-                    </form>
-                }*@
+                <form method="get" asp-controller="Cart" asp-action="MakeOrder" asp-route-returnurl="cart/index">
+                    <input type="hidden" name="Price" value="@ViewBag.total" />
+                    <input type="hidden" id="ip" name="Ip" value="@HttpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString()" />
+                    <button class="btn buyButton" type="submit">
+                        <span class="price">💰</span>
+                        <span class="shopping-cart"><a class="fa fa-shopping-cart" aria-hidden="true">🛍️</a></span>
+                        <a class="cart-btn" href="#">Buy!</a>
+                    </button>
+                </form>
             </div>
         </div>
     }

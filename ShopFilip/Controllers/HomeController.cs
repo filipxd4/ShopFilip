@@ -22,11 +22,5 @@ namespace ShopFilip.Controllers
         {
             return View(await _context.ProductsData.Include(c=>c.Photos).ToListAsync());
         }
-
-        [Route("ContactForm")]
-        public IActionResult ContactForm()
-        {
-            return View();
-        }
     }
 }

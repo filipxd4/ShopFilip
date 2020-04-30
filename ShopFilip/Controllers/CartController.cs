@@ -59,7 +59,7 @@ namespace OnlineShop.Controllers
             else
             {
                 List<Item> cart = SesionHelper.GetObjectFromJson<List<Item>>(HttpContext.Session, "cart");
-                int index = isExist(id,size);
+                int index = ifExist(id,size);
                 if (index != -1)
                 {
                     cart[index].Quantity++;
@@ -78,31 +78,25 @@ namespace OnlineShop.Controllers
         public IActionResult Remove(int id)
         {
             List<Item> cart = SesionHelper.GetObjectFromJson<List<Item>>(HttpContext.Session, "cart");
-            int index = isExist(id);
+            int index = ifExist(id);
             cart.RemoveAt(index);
             SesionHelper.SetObjectAsJson(HttpContext.Session, "cart", cart);
             return RedirectToAction("Index");
         }
 
-        private int isExist(int id)
+        private int ifExist(int id,string size=null)
         {
             List<Item> cart = SesionHelper.GetObjectFromJson<List<Item>>(HttpContext.Session, "cart");
             for (int i = 0; i < cart.Count; i++)
             {
-                if (cart[i].Product.Id.Equals(id))
+                if (size != null)
                 {
-                    return i;
+                    if (cart[i].Size.Equals(size) && cart[i].Product.Id.Equals(id))
+                    {
+                        return i;
+                    }
                 }
-            }
-            return -1;
-        }
-
-        private int isExist(int id, string size)
-        {
-            List<Item> cart = SesionHelper.GetObjectFromJson<List<Item>>(HttpContext.Session, "cart");
-            for (int i = 0; i < cart.Count; i++)
-            {
-                if (cart[i].Product.Id.Equals(id) && cart[i].Size.Equals(size))
+                else if(cart[i].Product.Id.Equals(id))
                 {
                     return i;
                 }
@@ -123,21 +117,21 @@ namespace OnlineShop.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> myAction(int Price, string Ip,string returnurl="")
+        public async Task<IActionResult> MakeOrder(int Price, string Ip,string returnurl="")
         {
             var usaer = await GetCurrentUserAsync();
             var useraId = usaer?.Id;
             if (returnurl=="")
             {
-                List<Item> cart = SesionHelper.GetObjectFromJson<List<Item>>(HttpContext.Session, "cart");
-                if (useraId == null)
-                {
-                    return NotFound();
-                }
-                var userProp = await _context.Users.FindAsync(useraId);
+                List<Item> cartItems = SesionHelper.GetObjectFromJson<List<Item>>(HttpContext.Session, "cart");
+                var user= await _context.Users.FindAsync(useraId);
                 var accessToken = await _payULogic.GetAccessTokenAsync();
-                var uriToPayU = await Order(userProp, Price, cart, Ip, accessToken);
-                return Redirect(uriToPayU);
+                var payUResponse = await _payULogic.GeneratePayLink(user, Price, cartItems, Ip, accessToken);
+                var jsonPayU = JsonConvert.DeserializeObject<StatusModel>(payUResponse);
+                var orderId = jsonPayU.orderId;
+                var uri = jsonPayU.redirectUri;
+                await SaveOrderToDatabase(orderId, cartItems, user, Price.ToString());
+                return Redirect(uri);
             }
             else
             {
@@ -156,70 +150,8 @@ namespace OnlineShop.Controllers
             return View();
         }
 
-        public async Task<string> Order(ApplicationUser user, int price, List<Item> itemfromCart, string ip,string accessToken)
-        {
-            string ProperPrice = (price*100).ToString();
-            var handler = new HttpClientHandler()
-            {
-                AllowAutoRedirect = false
-            };
-
-
-            using (var httpClient = new HttpClient(handler))
-            {
-                using (var request = new HttpRequestMessage(new HttpMethod("POST"), "https://secure.payu.com/api/v2_1/orders"))
-                {
-                    request.Headers.TryAddWithoutValidation("Cache-Control", "no-cache");
-                    request.Headers.TryAddWithoutValidation("Authorization", "Bearer " + accessToken + "");
-                    var stringToPayU = "{\n\"notifyUrl\": \"https://your.eshop.com/notify\"," +
-                        "\n\"continueUrl\":\"https://localhost:44380/cart/sucess\"," +
-                        "\n\"customerIp\":\""+ip+"\"," +
-                        "\n\"merchantPosId\": \"145227\"," +
-                        "\n\"description\": \"Filip Shop\"," +
-                        "\n\"currencyCode\": \"PLN\",\n\"totalAmount\": \"" + ProperPrice + "\",\n\"buyer\": {\n       " +
-                        "\"email\": \"" + user.Email + "\",\n\"phone\": \"988909909\",\n\"firstName\": \"" + user.Name + "\",\n  " +
-                        "\"lastName\": \"" + user.Surname + "\",\n\"language\": \"pl\"," +
-                        "\n\"delivery\": {\n" +
-                        "\"street\": \"" + user.Street + "\",\n\"postalCode\": \"" + user.PostalCode + "\",\n\"city\": \"" + user.Town + "\"\n}" +
-                        "\n}," +
-                        "\n\"products\": [\n";
-                    if (itemfromCart.Count() == 1)
-                    {
-                        stringToPayU += "{\n\"name\": \"" + itemfromCart.First().Product.Name + "\",\n\"unitPrice\": \"" + itemfromCart.First().Product.Price + "\",\n \"quantity\": \"" + itemfromCart.First().Quantity + "\"\n}\n";
-                    }
-                    else
-                    {
-                        for (int i = 0; i < itemfromCart.Count(); i++)
-                        {
-                            if (i == itemfromCart.Count() - 1)
-                            {
-                                stringToPayU += "{\n\"name\": \"" + itemfromCart[i].Product.Name + " "+ itemfromCart[i].Size +"\",\n\"unitPrice\": \"" + itemfromCart[i].Product.Price + "\",\n \"quantity\": \"" + itemfromCart[i].Quantity + "\"\n}\n";
-                            }
-                            else
-                            {
-                                stringToPayU += "{\n\"name\": \"" + itemfromCart[i].Product.Name + " " + itemfromCart[i].Size + "\",\n\"unitPrice\": \"" + itemfromCart[i].Product.Price + "\",\n \"quantity\": \"" + itemfromCart[i].Quantity + "\"\n},\n";
-                            }
-                        }
-                    }
-                    stringToPayU += "]\n}";
-
-                    request.Content = new StringContent(stringToPayU, Encoding.UTF8, "application/json");
-                    var response = await httpClient.SendAsync(request);
-                    var jsonString = await response.Content.ReadAsStringAsync();
-                    var objResponse1 = JsonConvert.DeserializeObject<StatusModel>(jsonString);
-                    OrderId = objResponse1.orderId;
-                    await SaveOrderToDatabase(OrderId, itemfromCart, user, price.ToString());
-                    return objResponse1.redirectUri;
-                }
-            }
-        }
-
         private async Task SaveOrderToDatabase(string orderId, List<Item> listOfProducts, ApplicationUser user,string price)
         {
-            var aaa = await _userManager.FindByIdAsync(user.Id);
-            Order order = new Order();
-            order.DateOfOrder = DateTime.Now.ToShortDateString();
-            order.OrderId = orderId;
             List<ProductsId> productId = new List<ProductsId>();
             foreach (var item in listOfProducts)
             {
@@ -240,19 +172,24 @@ namespace OnlineShop.Controllers
                 }
                 productId.Add(product);
             }
-            order.Products = productId;
-            order.StatusOrder = "New";
-            order.UserId = user.Id;
-            order.Price = price;
+
+            Order order = new Order.Builder()
+                .DateOfOrder(DateTime.Now.ToShortDateString())
+                .OrderId(orderId)
+                .Products(productId)
+                .StatusOrder("New")
+                .UserID(user.Id)
+                .Price(price)
+                .Build();
+
             List<Order> orderList = new List<Order>();
             orderList.Add(order);
-            if (aaa.OrdersList == null)
+            if (user.OrdersList == null)
             {
-                aaa.OrdersList = new List<Order>();
+                user.OrdersList = new List<Order>();
             }
-
-            aaa.OrdersList.Add(order);
-            await _userManager.UpdateAsync(aaa);
+            user.OrdersList.Add(order);
+            await _userManager.UpdateAsync(user);
         }
     }
 }
