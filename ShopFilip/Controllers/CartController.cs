@@ -26,6 +26,7 @@ namespace OnlineShop.Controllers
         private UserManager<ApplicationUser> _userManager;
         private IPayULogic _payULogic;
         public string OrderId = "";
+        private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
 
         public CartController(EfDbContext context, UserManager<ApplicationUser> userManager,IPayULogic PayULogic)
         {
@@ -106,17 +107,6 @@ namespace OnlineShop.Controllers
 
         [HttpGet]
         [Authorize]
-        private async Task<IActionResult> MyOrders(string id)
-        {
-            var aaa = await _userManager.FindByIdAsync(id);
-            var b = aaa.OrdersList;
-            return View();
-        }
-
-        private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
-
-        [HttpGet]
-        [Authorize]
         public async Task<IActionResult> MakeOrder(int Price, string Ip,string returnurl="")
         {
             var usaer = await GetCurrentUserAsync();
@@ -137,11 +127,6 @@ namespace OnlineShop.Controllers
             {
                 return RedirectToAction("Index");
             }
-        }
-
-        private IActionResult ErrorPage()
-        {
-            return View();
         }
 
         [Route("sucess")]

@@ -77,29 +77,21 @@ namespace ShopFilip.ShopLogic
                         "\n}," +
                         "\n\"products\": [\n";
                     if (itemfromCart.Count() == 1)
-                    {
                         stringToPayU += "{\n\"name\": \"" + itemfromCart.First().Product.Name + "\",\n\"unitPrice\": \"" + itemfromCart.First().Product.Price + "\",\n \"quantity\": \"" + itemfromCart.First().Quantity + "\"\n}\n";
-                    }
                     else
-                    {
                         for (int i = 0; i < itemfromCart.Count(); i++)
                         {
                             if (i == itemfromCart.Count() - 1)
-                            {
                                 stringToPayU += "{\n\"name\": \"" + itemfromCart[i].Product.Name + " " + itemfromCart[i].Size + "\",\n\"unitPrice\": \"" + itemfromCart[i].Product.Price + "\",\n \"quantity\": \"" + itemfromCart[i].Quantity + "\"\n}\n";
-                            }
                             else
-                            {
                                 stringToPayU += "{\n\"name\": \"" + itemfromCart[i].Product.Name + " " + itemfromCart[i].Size + "\",\n\"unitPrice\": \"" + itemfromCart[i].Product.Price + "\",\n \"quantity\": \"" + itemfromCart[i].Quantity + "\"\n},\n";
-                            }
                         }
-                    }
+
                     stringToPayU += "]\n}";
 
                     request.Content = new StringContent(stringToPayU, Encoding.UTF8, "application/json");
                     var response = await httpClient.SendAsync(request);
                     var jsonString = await response.Content.ReadAsStringAsync();
-                    
                     return jsonString;
                 }
             }
