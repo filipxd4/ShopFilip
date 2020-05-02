@@ -27,15 +27,6 @@ namespace ShopFilip.Models
 
         public List<PhotosList> Photos { get; set; }
 
-        public Product()
-        {
-        }
-
-        public Product(string name)
-        {
-            this.Name = name;
-        }
-
     }
 
     public class AddProduct

@@ -55,9 +55,9 @@ namespace ShopFilip.Models
                 return this;
             }
 
-            public Builder DateOfOrder(string userId)
+            public Builder DateOfOrder(string dateOfOrder)
             {
-                this.userId = userId;
+                this.dateOfOrder = dateOfOrder;
                 return this;
             }
 

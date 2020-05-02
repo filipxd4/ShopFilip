@@ -14,7 +14,6 @@ namespace ShopFilip.Controllers
         private SignInManager<ApplicationUser> _signManager;
         private EfDbContext _context;
         private IOrderLogic _orderLogic;
-
         private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
 
         public AccountController(EfDbContext context, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signManager, IOrderLogic orderLogic)
@@ -134,7 +133,6 @@ namespace ShopFilip.Controllers
             return View();
         }
 
-
         [Authorize]
         public async Task<IActionResult> ManageAccount()
         {
@@ -143,17 +141,12 @@ namespace ShopFilip.Controllers
             bool isAuthenticated = User.Identity.IsAuthenticated;
             if (isAuthenticated)
             {
-                ApplicationUser user;
                 if (User.IsInRole("Admin"))
-                {
-                    user = await _userManager.FindByIdAsync(useraId);
                     ViewBag.Role = "Admin";
-                }
                 else
-                {
-                    user = await _userManager.FindByIdAsync(useraId);
                     ViewBag.Role = "User";
-                }
+                
+                var user = await _userManager.FindByIdAsync(useraId);
                 return View(user);
             }
             else
