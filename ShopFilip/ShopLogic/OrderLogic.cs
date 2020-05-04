@@ -34,7 +34,7 @@ namespace ShopFilip.ShopLogic
             List<OrderProduct> orderProd = new List<OrderProduct>();
             foreach (var item in orders)
             {
-                string status = await _payULogic.GetStatusOfOrderAsync(idOfUser);
+                string status = await _payULogic.GetStatusOfOrderAsync(item.OrderId);
                 if (item.StatusOrder == "New" && status == "SUCCESS")
                 {
                     item.StatusOrder = "Paid";
@@ -51,7 +51,7 @@ namespace ShopFilip.ShopLogic
                         {
                             productList.Add(product);
                         }
-                        prQ.Add(new PoductQuantityAtribute(productList, itemo.Quantity, itemo.Value));
+                        prQ.Add(new PoductQuantityAtribute(productList, itemo.Quantity, itemo.Size));
                     }
                     catch
                     {
@@ -64,7 +64,5 @@ namespace ShopFilip.ShopLogic
             var sortedOrderList = orderProd.OrderByDescending(x => x.OrderDate);
             return orderProd;
         }
-        
-
     }
 }

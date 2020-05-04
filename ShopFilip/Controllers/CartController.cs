@@ -38,7 +38,7 @@ namespace OnlineShop.Controllers
         [Route("index")]
         public IActionResult Index()
         {
-            var cart = SesionHelper.GetObjectFromJson<List<Item>>(HttpContext.Session, "cart");
+            var cart = SesionHelper.GetObjectFromJson<List<ShoppingCartItem>>(HttpContext.Session, "cart");
             if (cart!=null)
             {
                 ViewBag.cart = cart;
@@ -50,16 +50,16 @@ namespace OnlineShop.Controllers
         [Route("buy/{id}")]
         public async Task<IActionResult> Buy(int id, string size, int number)
         {
-            if (SesionHelper.GetObjectFromJson<List<Item>>(HttpContext.Session, "cart") == null)
+            if (SesionHelper.GetObjectFromJson<List<ShoppingCartItem>>(HttpContext.Session, "cart") == null)
             {
                 var productModel = _context.ProductsData.Where(x=>x.Id==id).Include(x=>x.Photos).First();
-                List<Item> cart = new List<Item>();
-                cart.Add(new Item { Product = productModel, Quantity = number, Size=size});
+                List<ShoppingCartItem> cart = new List<ShoppingCartItem>();
+                cart.Add(new ShoppingCartItem { Product = productModel, Quantity = number, Size=size});
                 SesionHelper.SetObjectAsJson(HttpContext.Session, "cart", cart);
             }
             else
             {
-                List<Item> cart = SesionHelper.GetObjectFromJson<List<Item>>(HttpContext.Session, "cart");
+                List<ShoppingCartItem> cart = SesionHelper.GetObjectFromJson<List<ShoppingCartItem>>(HttpContext.Session, "cart");
                 int index = ifExist(id,size);
                 if (index != -1)
                 {
@@ -68,7 +68,7 @@ namespace OnlineShop.Controllers
                 else
                 {
                     var productModel = _context.ProductsData.Where(x => x.Id == id).Include(x => x.Photos).First();
-                    cart.Add(new Item { Product = productModel, Quantity = number, Size = size });
+                    cart.Add(new ShoppingCartItem { Product = productModel, Quantity = number, Size = size });
                 }
                 SesionHelper.SetObjectAsJson(HttpContext.Session, "cart", cart);
             }
@@ -78,7 +78,7 @@ namespace OnlineShop.Controllers
         [Route("remove/{id}")]
         public IActionResult Remove(int id)
         {
-            List<Item> cart = SesionHelper.GetObjectFromJson<List<Item>>(HttpContext.Session, "cart");
+            List<ShoppingCartItem> cart = SesionHelper.GetObjectFromJson<List<ShoppingCartItem>>(HttpContext.Session, "cart");
             int index = ifExist(id);
             cart.RemoveAt(index);
             SesionHelper.SetObjectAsJson(HttpContext.Session, "cart", cart);
@@ -87,7 +87,7 @@ namespace OnlineShop.Controllers
 
         private int ifExist(int id,string size=null)
         {
-            List<Item> cart = SesionHelper.GetObjectFromJson<List<Item>>(HttpContext.Session, "cart");
+            List<ShoppingCartItem> cart = SesionHelper.GetObjectFromJson<List<ShoppingCartItem>>(HttpContext.Session, "cart");
             for (int i = 0; i < cart.Count; i++)
             {
                 if (size != null)
@@ -113,7 +113,7 @@ namespace OnlineShop.Controllers
             var useraId = usaer?.Id;
             if (returnurl=="")
             {
-                List<Item> cartItems = SesionHelper.GetObjectFromJson<List<Item>>(HttpContext.Session, "cart");
+                List<ShoppingCartItem> cartItems = SesionHelper.GetObjectFromJson<List<ShoppingCartItem>>(HttpContext.Session, "cart");
                 var user= await _context.Users.FindAsync(useraId);
                 var accessToken = await _payULogic.GetAccessTokenAsync();
                 var payUResponse = await _payULogic.GeneratePayLink(user, Price, cartItems, Ip, accessToken);
@@ -135,18 +135,18 @@ namespace OnlineShop.Controllers
             return View();
         }
 
-        private async Task SaveOrderToDatabase(string orderId, List<Item> listOfProducts, ApplicationUser user,string price)
+        private async Task SaveOrderToDatabase(string orderId, List<ShoppingCartItem> listOfProducts, ApplicationUser user,string price)
         {
-            List<ProductsId> productId = new List<ProductsId>();
+            List<OrderedProductsData> productId = new List<OrderedProductsData>();
             foreach (var item in listOfProducts)
             {
                 var a = _context.ProductsData.Where(x => x.Id == item.Product.Id).Include(c => c.ProductAtribute).First();
 
-                ProductsId product = new ProductsId();
+                OrderedProductsData product = new OrderedProductsData();
                 product.IdOfOrder = orderId;
                 product.Quantity = item.Quantity;
                 product.IdOfProduct = item.Product.Id;
-                product.Value = item.Size;
+                product.Size = item.Size;
                 foreach (var itema in a.ProductAtribute)
                 {
                     if (itema.Value==item.Size)

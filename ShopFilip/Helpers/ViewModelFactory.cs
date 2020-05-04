@@ -13,7 +13,6 @@ namespace ShopFilip.Helpers
         {
             ProductViewModel viewModel = new ProductViewModel()
             {
-                Id = model.Id,
                 Name = model.Name,
                 Price = model.Price,
                 Table= model.Table,
@@ -29,7 +28,6 @@ namespace ShopFilip.Helpers
         {
             ProductViewModel viewModel = new ProductViewModel()
             {
-                Id = models.First().Id,
                 Name = models.First().Name,
                 Price = models.First().Price,
                 Table= models.First().Table,
@@ -43,7 +41,6 @@ namespace ShopFilip.Helpers
         {
             Product model = new Product()
             {
-                Id = viewModel.Id,
                 Name = viewModel.Name,
                 Price = viewModel.Price,
                 Table = viewModel.Table,

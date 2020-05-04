@@ -18,17 +18,11 @@ namespace ShopFilip.Migrations
 
             string role1 = "Admin";
 
-            string role2 = "Member";
-
             string password = "P@$$w0rd";
 
             if (await roleManager.FindByNameAsync(role1) == null)
             {
                 await roleManager.CreateAsync(new ApplicationRole(role1, DateTime.Now));
-            }
-            if (await roleManager.FindByNameAsync(role2) == null)
-            {
-                await roleManager.CreateAsync(new ApplicationRole(role2, DateTime.Now));
             }
 
             if (await userManager.FindByNameAsync("aa@aa.aa") == null)

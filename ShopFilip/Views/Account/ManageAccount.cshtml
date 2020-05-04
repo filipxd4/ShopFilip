@@ -12,7 +12,7 @@
 <div class="container" style="display:flex">
     <div class="col-md-6" id="manage-form">
         <h1 style="text-align:center">Dostępne akcje</h1>
-        <form id="manage-form" method="get" asp-controller="Account" asp-action="Edit" asp-route-userId="@UserManager.GetUserId(User)">
+        <form id="manage-form" method="get" asp-controller="Account" asp-action="Edit">
             <button class="btn button-manage-account" type="submit">
                 Edytuj dane ✏️
             </button>

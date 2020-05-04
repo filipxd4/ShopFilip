@@ -16,6 +16,6 @@ namespace ShopFilip.Models
         public DbSet<Product> ProductsData { get; set; }
         public DbSet<ProductAtribute> ProductAtributes { get; set; }
         public DbSet<Order> Orders { get; set; }
-        public DbSet<ProductsId> ProductsId { get; set; }
+        public DbSet<OrderedProductsData> ProductsId { get; set; }
     }
 }

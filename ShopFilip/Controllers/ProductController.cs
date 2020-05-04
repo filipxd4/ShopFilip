@@ -35,12 +35,6 @@ namespace OnlineShop.Controllers
             return View();
         }
 
-        [HttpPost]
-        public IActionResult AddProduct(ProductViewModel viewModel)
-        {
-            return RedirectToAction("Buy", "ShoppingCart", new { id = viewModel.Id });
-        }
-
         public async Task<IActionResult> Show(string genre)
         {
             List<Product> ProductsData;
@@ -86,7 +80,7 @@ namespace OnlineShop.Controllers
             return Json(quantity);
         }
 
-        public ActionResult GetPaggedData(string SearchValue, string[] Sizes, string GroupOfProducts, string gender, int pageNumber = 1, int pageSize = 2)
+        public ActionResult GetPaggedData(string SearchValue, string[] Sizes, string GroupOfProducts, Gender gender, int pageNumber = 1, int pageSize = 2)
         {
             var a = Sizes.ToArray();
             List<Product> tempListOfProducts = new List<Product>();

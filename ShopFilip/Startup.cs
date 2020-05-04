@@ -76,7 +76,7 @@ namespace ShopFilip
                     template: "{controller=Account}/{action=MainPage}/{id?}");
             });
             AdminData.Initialize(context, userManager, roleManager).Wait();
-            AdminData.Initialize(context, userManager, roleManager).Wait();
+            ProductsData.Initialize(context).Wait();
         }
     }
 }

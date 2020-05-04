@@ -119,8 +119,6 @@ namespace ShopFilip.Migrations
 
                     b.Property<DateTime>("CreationDate");
 
-                    b.Property<string>("Description");
-
                     b.Property<string>("Name")
                         .HasMaxLength(256);
 
@@ -220,6 +218,29 @@ namespace ShopFilip.Migrations
                     b.ToTable("Orders");
                 });
 
+            modelBuilder.Entity("ShopFilip.Models.OrderedProductsData", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("IdOfOrder");
+
+                    b.Property<int>("IdOfProduct");
+
+                    b.Property<string>("OrderId");
+
+                    b.Property<int>("Quantity");
+
+                    b.Property<string>("Size");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("ProductsId");
+                });
+
             modelBuilder.Entity("ShopFilip.Models.PhotosList", b =>
                 {
                     b.Property<int>("Id")
@@ -247,7 +268,7 @@ namespace ShopFilip.Migrations
 
                     b.Property<string>("Description");
 
-                    b.Property<string>("Gender");
+                    b.Property<int>("Gender");
 
                     b.Property<string>("Group");
 
@@ -283,29 +304,6 @@ namespace ShopFilip.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("ProductAtributes");
-                });
-
-            modelBuilder.Entity("ShopFilip.Models.ProductsId", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("IdOfOrder");
-
-                    b.Property<int>("IdOfProduct");
-
-                    b.Property<string>("OrderId");
-
-                    b.Property<int>("Quantity");
-
-                    b.Property<string>("Value");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrderId");
-
-                    b.ToTable("ProductsId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -360,6 +358,13 @@ namespace ShopFilip.Migrations
                         .HasForeignKey("ApplicationUserId");
                 });
 
+            modelBuilder.Entity("ShopFilip.Models.OrderedProductsData", b =>
+                {
+                    b.HasOne("ShopFilip.Models.Order")
+                        .WithMany("Products")
+                        .HasForeignKey("OrderId");
+                });
+
             modelBuilder.Entity("ShopFilip.Models.PhotosList", b =>
                 {
                     b.HasOne("ShopFilip.Models.Product")
@@ -372,13 +377,6 @@ namespace ShopFilip.Migrations
                     b.HasOne("ShopFilip.Models.Product")
                         .WithMany("ProductAtribute")
                         .HasForeignKey("ProductId");
-                });
-
-            modelBuilder.Entity("ShopFilip.Models.ProductsId", b =>
-                {
-                    b.HasOne("ShopFilip.Models.Order")
-                        .WithMany("Products")
-                        .HasForeignKey("OrderId");
                 });
 #pragma warning restore 612, 618
         }

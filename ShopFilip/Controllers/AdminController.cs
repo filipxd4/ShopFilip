@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ShopFilip.Helpers;
 using ShopFilip.IdentityModels;
 using ShopFilip.Models;
 using System;
@@ -70,7 +71,7 @@ namespace ShopFilip.Controllers
                 product.Name = productToAdd.Name;
                 product.Price = Convert.ToInt32(productToAdd.Price);
                 product.Description = productToAdd.Description;
-                product.Gender = productToAdd.Gender;
+                product.Gender = (Gender)(Convert.ToInt32(productToAdd.Gender));
                 product.Group = productToAdd.Group;
                 product.ProductAtribute = prodAtr;
                 List<PhotosList> photosList = new List<PhotosList>();
@@ -133,7 +134,7 @@ namespace ShopFilip.Controllers
                     result.Name = productToAdd.Name;
                     result.Price = Convert.ToInt32(productToAdd.Price);
                     result.Description = productToAdd.Description;
-                    result.Gender = productToAdd.Gender;
+                    result.Gender = (Gender)(Convert.ToInt32(productToAdd.Gender));
                     result.Group = productToAdd.Group;
                     result.ProductAtribute = prodAtr;
                     List<PhotosList> photosList = new List<PhotosList>();
@@ -220,7 +221,7 @@ namespace ShopFilip.Controllers
 
                     }
 
-                    prQ.Add(new PoductQuantityAtribute(productList, itemo.Quantity, itemo.Value));
+                    prQ.Add(new PoductQuantityAtribute(productList, itemo.Quantity, itemo.Size));
                 }
                 DateTime dateTime = DateTime.Parse(itema.DateOfOrder);
                 orderProd.Add(new OrderProduct(prQ, dateTime, itema.OrderId, itema.StatusOrder));

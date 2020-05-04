@@ -16,7 +16,6 @@ namespace ShopFilip.Migrations
                     Name = table.Column<string>(maxLength: 256, nullable: true),
                     NormalizedName = table.Column<string>(maxLength: 256, nullable: true),
                     ConcurrencyStamp = table.Column<string>(nullable: true),
-                    Description = table.Column<string>(nullable: true),
                     CreationDate = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
@@ -65,7 +64,7 @@ namespace ShopFilip.Migrations
                     Price = table.Column<int>(nullable: false),
                     Group = table.Column<string>(nullable: true),
                     Table = table.Column<string>(nullable: true),
-                    Gender = table.Column<string>(nullable: true),
+                    Gender = table.Column<int>(nullable: false),
                     Description = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -187,6 +186,7 @@ namespace ShopFilip.Migrations
                     UserId = table.Column<string>(nullable: true),
                     DateOfOrder = table.Column<string>(nullable: true),
                     StatusOrder = table.Column<string>(nullable: true),
+                    Price = table.Column<string>(nullable: true),
                     ApplicationUserId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -251,7 +251,7 @@ namespace ShopFilip.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     IdOfOrder = table.Column<string>(nullable: true),
                     IdOfProduct = table.Column<int>(nullable: false),
-                    Value = table.Column<string>(nullable: true),
+                    Size = table.Column<string>(nullable: true),
                     Quantity = table.Column<int>(nullable: false),
                     OrderId = table.Column<string>(nullable: true)
                 },

@@ -1,10 +1,12 @@
-﻿using System;
+﻿using ShopFilip.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace ShopFilip.Models
 {
+   
     public class Product
     {
         public int Id { get; set; }
@@ -19,14 +21,13 @@ namespace ShopFilip.Models
 
         public string Table { get; set; }
 
-        public string Gender { get; set; }
+        public Gender Gender { get; set; }
 
         public string Description { get; set; }
 
         public List<ProductAtribute> ProductAtribute { get; set; }
 
         public List<PhotosList> Photos { get; set; }
-
     }
 
     public class AddProduct

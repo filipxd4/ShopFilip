@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using ShopFilip.Helpers;
 using ShopFilip.IdentityModels;
 using ShopFilip.Models;
 using System;
@@ -15,32 +16,30 @@ namespace ShopFilip.Migrations
         {
             context.Database.EnsureCreated();
 
-            //if (await roleManager.FindByNameAsync(role1) == null)
-            //{
-            //    await roleManager.CreateAsync(new ApplicationRole(role1, desc1, DateTime.Now));
-            //}
-            //if (await roleManager.FindByNameAsync(role2) == null)
-            //{
-            //    await roleManager.CreateAsync(new ApplicationRole(role2, desc2, DateTime.Now));
-            //}
+            if (context.ProductsData.Count() == 0)
+            {
+                Product product = new Product();
+                List<ProductAtribute> prodAtr = new List<ProductAtribute>();
+                prodAtr.Add(new ProductAtribute("prod", "M", 1));
+                prodAtr.Add(new ProductAtribute("prod", "L", 1));
+                prodAtr.Add(new ProductAtribute("prod", "XL", 1));
+                prodAtr.Add(new ProductAtribute("prod", "XXL", 1));
 
-            //if (await userManager.FindByNameAsync("aa@aa.aa") == null)
-            //{
-            //    var user = new ApplicationUser
-            //    {
-            //        UserName = "aa@aa.aa",
-            //        Email = "aa@aa.aa",
-            //    };
+                List<PhotosList> photosList = new List<PhotosList>();
+                photosList.Add(new PhotosList("photo", @"\Upload\Photos\2d79fb18-0341-4a14-8da1-f7f3edb90a49.jpg"));
+                photosList.Add(new PhotosList("photo", @"\Upload\Photos\5fb493c8-04b7-4e3d-97d7-bc1cb69dc10a.jpg"));
+                product.Photos = photosList;
 
-            //    var result = await userManager.CreateAsync(user);
-            //    if (result.Succeeded)
-            //    {
-            //        await userManager.AddPasswordAsync(user, password);
-            //        //await userManager.AddToRoleAsync(user, role1);
-            //        await userManager.AddClaimAsync(user, claim: new Claim(ClaimTypes.Role.ToString(), "Admin"));
-            //    }
-            //    adminId1 = user.Id;
-            //}
+                product.Name = "Jeansy damskie Rocks";
+                product.Price = 299;
+                product.Description = "Spodnie damskie Rocks<br />Skład:Bawełna<br /><br />Idealnie dopasowane";
+                product.Gender = (Gender)0;
+                product.Group = "Spodnie";
+                product.ProductAtribute = prodAtr;
+                product.Table = @"\Upload\Tables\92e81a01-5c46-4687-8a53-5aa182821760.jpg";
+                context.Add(product);
+                await context.SaveChangesAsync();
+            }
         }
     }
 }

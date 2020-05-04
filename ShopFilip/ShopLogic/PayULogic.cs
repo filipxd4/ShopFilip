@@ -16,9 +16,10 @@ namespace ShopFilip.ShopLogic
     {
         public async Task<string> GetStatusOfOrderAsync(string orderId)
         {
+            var aaaa = await GetAccessTokenAsync();
             using (var httpClient = new HttpClient())
             {
-                using (var request = new HttpRequestMessage(new HttpMethod("GET"), "https://private-anon-8f04126df6-payu21.apiary-proxy.com/api/v2_1/orders/" + orderId))
+                using (var request = new HttpRequestMessage(new HttpMethod("GET"), "https://secure.payu.com/api/v2_1/orders/" + orderId))
                 {
                     request.Headers.TryAddWithoutValidation("Authorization", "Bearer 3e5cac39-7e38-4139-8fd6-30adc06a61bd");
                     var response = await httpClient.SendAsync(request);
@@ -51,7 +52,7 @@ namespace ShopFilip.ShopLogic
             }
         }
 
-        public async Task<string> GeneratePayLink(ApplicationUser user, int price, List<Item> itemfromCart, string ip, string accessToken)
+        public async Task<string> GeneratePayLink(ApplicationUser user, int price, List<ShoppingCartItem> itemfromCart, string ip, string accessToken)
         {
             string ProperPrice = (price * 100).ToString();
             var handler = new HttpClientHandler()

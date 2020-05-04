@@ -157,12 +157,14 @@ namespace ShopFilip.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> Edit(string userId)
+        public async Task<IActionResult> Edit()
         {
-            if (userId == null)
+            var usaer = await GetCurrentUserAsync();
+            var useraId = usaer?.Id;
+            if (useraId == null)
                 return ErrorPage();
 
-            var user = await _context.Users.FindAsync(userId);
+            var user = await _context.Users.FindAsync(useraId);
             if (user == null)
                 return ErrorPage();
             return View(user);

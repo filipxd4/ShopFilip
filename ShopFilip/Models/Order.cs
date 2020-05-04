@@ -20,7 +20,12 @@ namespace ShopFilip.Models
 
         public ApplicationUser ApplicationUser { get; set; }
 
-        public List<ProductsId> Products { get; set; }
+        public List<OrderedProductsData> Products { get; set; }
+
+        public Order()
+        {
+
+        }
 
         public Order(Builder builder)
         {
@@ -41,7 +46,7 @@ namespace ShopFilip.Models
             internal string statusOrder;
             internal string price;
             internal ApplicationUser applicationUser;
-            internal List<ProductsId> products;
+            internal List<OrderedProductsData> products;
 
             public Builder OrderId(string orderId)
             {
@@ -79,7 +84,7 @@ namespace ShopFilip.Models
                 return this;
             } 
             
-            public Builder Products(List<ProductsId> products)
+            public Builder Products(List<OrderedProductsData> products)
             {
                 this.products = products;
                 return this;
