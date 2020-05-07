@@ -52,9 +52,9 @@ namespace OnlineShop.Controllers
         {
             if (SesionHelper.GetObjectFromJson<List<ShoppingCartItem>>(HttpContext.Session, "cart") == null)
             {
-                var productModel = _context.ProductsData.Where(x=>x.Id==id).Include(x=>x.Photos).First();
+                var productModel = _context.Products.Where(x=>x.Id==id).Include(x=>x.Photos).First();
                 List<ShoppingCartItem> cart = new List<ShoppingCartItem>();
-                cart.Add(new ShoppingCartItem { Product = productModel, Quantity = number, Size=size});
+                cart.Add(new ShoppingCartItem { Product = productModel, Quantity = number, Size=(SizeOfPruduct)Convert.ToInt32(size)});
                 SesionHelper.SetObjectAsJson(HttpContext.Session, "cart", cart);
             }
             else
@@ -67,8 +67,8 @@ namespace OnlineShop.Controllers
                 }
                 else
                 {
-                    var productModel = _context.ProductsData.Where(x => x.Id == id).Include(x => x.Photos).First();
-                    cart.Add(new ShoppingCartItem { Product = productModel, Quantity = number, Size = size });
+                    var productModel = _context.Products.Where(x => x.Id == id).Include(x => x.Photos).First();
+                    cart.Add(new ShoppingCartItem { Product = productModel, Quantity = number, Size = (SizeOfPruduct)Convert.ToInt32(size)});
                 }
                 SesionHelper.SetObjectAsJson(HttpContext.Session, "cart", cart);
             }
@@ -107,7 +107,7 @@ namespace OnlineShop.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> MakeOrder(int Price, string Ip,string returnurl="")
+        public async Task<IActionResult> MakeOrder(int price, string Ip,string returnurl="")
         {
             var usaer = await GetCurrentUserAsync();
             var useraId = usaer?.Id;
@@ -116,11 +116,11 @@ namespace OnlineShop.Controllers
                 List<ShoppingCartItem> cartItems = SesionHelper.GetObjectFromJson<List<ShoppingCartItem>>(HttpContext.Session, "cart");
                 var user= await _context.Users.FindAsync(useraId);
                 var accessToken = await _payULogic.GetAccessTokenAsync();
-                var payUResponse = await _payULogic.GeneratePayLink(user, Price, cartItems, Ip, accessToken);
+                var payUResponse = await _payULogic.GeneratePayLink(user, price, cartItems, Ip, accessToken);
                 var jsonPayU = JsonConvert.DeserializeObject<StatusModel>(payUResponse);
                 var orderId = jsonPayU.orderId;
                 var uri = jsonPayU.redirectUri;
-                await SaveOrderToDatabase(orderId, cartItems, user, Price.ToString());
+                await SaveOrderToDatabase(orderId, cartItems, user, price);
                 return Redirect(uri);
             }
             else
@@ -135,35 +135,30 @@ namespace OnlineShop.Controllers
             return View();
         }
 
-        private async Task SaveOrderToDatabase(string orderId, List<ShoppingCartItem> listOfProducts, ApplicationUser user,string price)
+        private async Task SaveOrderToDatabase(string orderId, List<ShoppingCartItem> listOfProducts, ApplicationUser user,decimal price)
         {
-            List<OrderedProductsData> productId = new List<OrderedProductsData>();
+            List<OrderedProduct> orderedProducts = new List<OrderedProduct>();
             foreach (var item in listOfProducts)
             {
-                var a = _context.ProductsData.Where(x => x.Id == item.Product.Id).Include(c => c.ProductAtribute).First();
+                var product = _context.Products.Where(x => x.Id == item.Product.Id).Include(c => c.Sizes).First();
 
-                OrderedProductsData product = new OrderedProductsData();
-                product.IdOfOrder = orderId;
-                product.Quantity = item.Quantity;
-                product.IdOfProduct = item.Product.Id;
-                product.Size = item.Size;
-                foreach (var itema in a.ProductAtribute)
+                OrderedProduct orderedProduct = new OrderedProduct(product,(SizeOfPruduct)Convert.ToInt32(item.Size), item.Quantity);
+                foreach (var itema in product.Sizes)
                 {
-                    if (itema.Value==item.Size)
+                    if (itema.SizeOfPruduct==item.Size)
                     {
                         itema.Quantity = itema.Quantity - item.Quantity;
                         _context.Update(itema);
                     }
                 }
-                productId.Add(product);
+                orderedProducts.Add(orderedProduct);
             }
 
             Order order = new Order.Builder()
-                .DateOfOrder(DateTime.Now.ToShortDateString())
+                .DateOfOrder(DateTime.Now)
                 .OrderId(orderId)
-                .Products(productId)
-                .StatusOrder("New")
-                .UserID(user.Id)
+                .Products(orderedProducts)
+                .Status(ShopFilip.Helpers.Status.New)
                 .Price(price)
                 .Build();
 

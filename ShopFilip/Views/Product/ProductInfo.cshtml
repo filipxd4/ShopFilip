@@ -20,20 +20,20 @@
             <h6 style="text-align:left;"><strong>Dostępne rozmiary:</strong></h6>
             <div style="display:flex;padding-bottom:10px">
                 <ul id="group_22">
-                    @for (var i = 0; i < Model.ProductAtribute.Count(); i++)
+                    @for (var i = 0; i < Model.Sizes.Count(); i++)
                     {
                         if (i == 0)
                         {
                             <li class="input-container pull-xs-left">
-                                <input class="input-radio" type="radio" name="size" value="@Model.ProductAtribute[i].Value" checked="checked">
-                                <span class="radio-label">@Model.ProductAtribute[i].Value</span>
+                                <input class="input-radio" type="radio" name="size" value="@Model.Sizes[i].SizeOfPruduct" checked="checked">
+                                <span class="radio-label">@Model.Sizes[i].SizeOfPruduct</span>
                             </li>
                         }
                         else
                         {
                             <li class="input-container pull-xs-left">
-                                <input class="input-radio" type="radio" name="size" value="@Model.ProductAtribute[i].Value">
-                                <span class="radio-label">@Model.ProductAtribute[i].Value</span>
+                                <input class="input-radio" type="radio" name="size" value="@Model.Sizes[i].SizeOfPruduct">
+                                <span class="radio-label">@Model.Sizes[i].SizeOfPruduct</span>
                             </li>
                         }
                     }
@@ -60,7 +60,7 @@
         <div class="fotorama" data-nav="thumbs" data-height="500">
             @for (var i = 0; i < Model.Photos.Count(); i++)
             {
-                <img src="@Model.Photos[i].Value">
+                <img src="@Model.Photos[i].PhotoPath">
             }
         </div>
     </div>
@@ -113,9 +113,9 @@
         var atrb = (this).value;
         var idofProd = @Model.Id;
 
-        $.getJSON("/Product/GetQuantityByIdAndAtr", {
+        $.getJSON("/Product/GetQuantityByProductIdAndSize", {
             id: idofProd,
-            atr: atrb
+            size: atrb
         }, function(response) {
             $('#quantity').attr('max', response);
             console.log($('#quantity').attr('max'))
@@ -143,10 +143,10 @@
     $(document).ready(function() {
         var atr = $(".input-radio")[0].value;
         $.ajax({
-            url: "/Product/GetQuantityByIdAndAtr",
+            url: "/Product/GetQuantityByProductIdAndSize",
             data: {
                 id: @Model.Id,
-                atr: atr
+                size: atr
             },
             traditional: true,
             success: function(response) {

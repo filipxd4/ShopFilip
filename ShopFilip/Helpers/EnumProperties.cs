@@ -14,7 +14,25 @@ namespace ShopFilip.Helpers
     public enum Group
     {
         Spodnie = 0,
-        Koszule= 2,
-        Kurtki= 3
+        Koszule = 1,
+        Kurtki = 2,
+        TShirt = 3
+    }
+
+    public enum SizeOfPruduct
+    {
+        M = 0,
+        L = 1,
+        XL = 2,
+        XXL = 3,
+    }
+
+    public enum Status
+    {
+        New = 0,
+        Paid = 1,
+        Success = 1,
+        Send = 1,
+        Cancel = 1,
     }
 }

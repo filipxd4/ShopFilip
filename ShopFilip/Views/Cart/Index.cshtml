@@ -31,7 +31,7 @@
                 <tr>
                     <td><a asp-controller="cart" asp-action="remove" asp-route-id="@item.Product.Id">Remove</a></td>
                     <td>@item.Product.Name</td>
-                    <td><img class="photoInCart" src="@item.Product.Photos[0].Value" alt="" /></td>
+                    <td><img class="photoInCart" src="@item.Product.Photos[0].PhotoPath" alt="" /></td>
                     <td>@item.Product.Price</td>
                     <td>@item.Quantity</td>
                     <td>@item.Size</td>

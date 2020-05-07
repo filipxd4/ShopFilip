@@ -8,7 +8,7 @@ namespace ShopFilip.Models
 {
     public class Register
     {
-        [Required, MaxLength(256)]
+        [Required, MaxLength(50)]
         public string Username { get; set; }
 
         [Required, MaxLength(256)]

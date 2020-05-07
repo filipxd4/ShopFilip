@@ -1,4 +1,5 @@
 ﻿@model ShopFilip.Models.Product
+@using ShopFilip.Helpers;
 @section CssLinks {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/fotorama/4.6.4/fotorama.css" rel="stylesheet">
@@ -29,9 +30,9 @@
                 <div class="form-group">
                     <label class="container">
                         Mężczyzna
-                        @if ((int)Model.Gender == 1)
+                        @if (Model.Gender == Gender.Men)
                         {
-                            <input type="radio" checked="checked" name="gender" value="man">
+                            <input type="radio" checked="checked" name="gender" value="@Gender.Men">
                         }
                         else
                         {
@@ -41,9 +42,9 @@
                     </label>
                     <label class="container">
                         Kobieta
-                        @if ((int)Model.Gender == 0)
+                        @if (Model.Gender == Gender.Woman)
                         {
-                            <input type="radio" checked="checked" name="gender" value="woman">
+                            <input type="radio" checked="checked" name="gender" value="@Gender.Woman">
                         }
                         else
                         {
@@ -57,11 +58,11 @@
                     <label class="container">
                         M
                         @{bool a = false;}
-                        @foreach (var item in Model.ProductAtribute)
+                        @foreach (var item in Model.Sizes)
                         {
-                            @if (item.Value.Equals("M"))
+                            @if ((int)item.SizeOfPruduct == 0)
                             {
-                                <input class="size-container" type="checkbox" checked="checked" name="size" value="M">
+                                <input class="size-container" type="checkbox" checked="checked" name="size" value="0">
                                 <input min="0" type="number" name="quantity" value="@item.Quantity">
                                 <span class="checkmark"></span>
                                 a = true;
@@ -69,7 +70,7 @@
                         }
                         @if (a == false)
                         {
-                            <input class="size-container" type="checkbox" name="size" value="M">
+                            <input class="size-container" type="checkbox" name="size" value="0">
                             <input style="display:none" min="0" type="number" name="quantity">
                             <span class="checkmark"></span>
                         }
@@ -77,11 +78,11 @@
                     <label class="container">
                         L
                         @{bool b = false;}
-                        @foreach (var item in Model.ProductAtribute)
+                        @foreach (var item in Model.Sizes)
                         {
-                            @if (item.Value.Equals("L"))
+                            @if ((int)item.SizeOfPruduct == 1)
                             {
-                                <input class="size-container" type="checkbox" checked="checked" name="size" value="L">
+                                <input class="size-container" type="checkbox" checked="checked" name="size" value="1">
                                 <input min="0" type="number" name="quantity" value="@item.Quantity">
                                 <span class="checkmark"></span>
                                 b = true;
@@ -89,7 +90,7 @@
                         }
                         @if (b == false)
                         {
-                            <input class="size-container" type="checkbox" name="size" value="L">
+                            <input class="size-container" type="checkbox" name="size" value="1">
                             <input style="display:none" min="0" type="number" name="quantity">
                             <span class="checkmark"></span>
                         }
@@ -97,11 +98,11 @@
                     <label class="container">
                         XL
                         @{bool c = false;}
-                        @foreach (var item in Model.ProductAtribute)
+                        @foreach (var item in Model.Sizes)
                         {
-                            @if (item.Value.Equals("XL"))
+                            @if ((int)item.SizeOfPruduct == 2)
                             {
-                                <input class="size-container" type="checkbox" checked="checked" name="size" value="XL">
+                                <input class="size-container" type="checkbox" checked="checked" name="size" value="2">
                                 <input min="0" type="number" name="quantity" value="@item.Quantity">
                                 <span class="checkmark"></span>
                                 c = true;
@@ -109,7 +110,7 @@
                         }
                         @if (c == false)
                         {
-                            <input class="size-container" type="checkbox" name="size" value="XL">
+                            <input class="size-container" type="checkbox" name="size" value="2">
                             <input style="display:none" min="0" type="number" name="quantity">
                             <span class="checkmark"></span>
                         }
@@ -117,11 +118,11 @@
                     <label class="container">
                         XXL
                         @{bool d = false;}
-                        @foreach (var item in Model.ProductAtribute)
+                        @foreach (var item in Model.Sizes)
                         {
-                            @if (item.Value.Equals("XXL"))
+                            @if ((int)item.SizeOfPruduct == 3)
                             {
-                                <input class="size-container" type="checkbox" checked="checked" name="size" value="XXL">
+                                <input class="size-container" type="checkbox" checked="checked" name="size" value="3">
                                 <input min="0" type="number" name="quantity" value="@item.Quantity">
                                 <span class="checkmark"></span>
                                 d = true;
@@ -129,7 +130,7 @@
                         }
                         @if (d == false)
                         {
-                            <input class="size-container" type="checkbox" name="size" value="XXL">
+                            <input class="size-container" type="checkbox" name="size" value="3">
                             <input style="display:none" min="0" type="number" name="quantity">
                             <span class="checkmark"></span>
                         }
@@ -139,9 +140,9 @@
                 <div class="form-group">
                     <h4>Grupa</h4>
                     <label class="container">
-                        @if (Model.Group == "Koszule")
+                        @if (Model.Group == Group.Koszule)
                         {
-                            <input type="radio" checked="checked" name="group" value="Koszule">
+                            <input type="radio" checked="checked" name="group" value="1">
                         }
                         else
                         {
@@ -151,9 +152,9 @@
                         <span class="checkmark"></span>
                     </label>
                     <label class="container">
-                        @if (Model.Group == "Spodnie")
+                        @if (Model.Group == Group.Spodnie)
                         {
-                            <input type="radio" checked="checked" name="group" value="Spodnie">
+                            <input type="radio" checked="checked" name="group" value="0">
                         }
                         else
                         {
@@ -163,9 +164,9 @@
                         <span class="checkmark"></span>
                     </label>
                     <label class="container">
-                        @if (Model.Group == "T-Shirt")
+                        @if (Model.Group == Group.TShirt)
                         {
-                            <input type="radio" checked="checked" name="group" value="T-Shirt">
+                            <input type="radio" checked="checked" name="group" value="3">
                         }
                         else
                         {
@@ -175,9 +176,9 @@
                         <span class="checkmark"></span>
                     </label>
                     <label class="container">
-                        @if (Model.Group == "Kurtki")
+                        @if (Model.Group == Group.Kurtki)
                         {
-                            <input type="radio" checked="checked" name="group" value="Kurtki">
+                            <input type="radio" checked="checked" name="group" value="@Group.Kurtki">
                         }
                         else
                         {
@@ -191,7 +192,7 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label asp-for="Description" class="control-label">Opis:</label>
-                    <textarea asp-for="Description" id="description" class="form-control" rows="5" id="comment"></textarea>
+                    <textarea asp-for="Description" id="description comment" class="form-control" rows="5" ></textarea>
                     <span asp-validation-for="Description" class="text-danger"></span>
                 </div>
 
@@ -203,7 +204,7 @@
                         @foreach (var item in Model.Photos)
                         {
                             <div id='photo'>
-                                <input id='x' type='button' value='X'><img name='photo-of-product' width='100' id='photo-min-product' src="@item.Value">
+                                <input id='x' type='button' value='X'><img name='photo-of-product' width='100' id='photo-min-product' src="@item.PhotoPath">
                             </div>
                         }
                     </div>

@@ -1,4 +1,5 @@
-﻿using ShopFilip.IdentityModels;
+﻿using ShopFilip.Helpers;
+using ShopFilip.IdentityModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,29 +11,25 @@ namespace ShopFilip.Models
     {
         public string OrderId { get; set; }
 
-        public string UserId { get; set; }
+        public DateTime DateOfOrder { get; set; }
 
-        public string DateOfOrder { get; set; }
+        public Status Status { get; set; }
 
-        public string StatusOrder { get; set; }
-
-        public string Price { get; set; }
+        public decimal Price { get; set; }
 
         public ApplicationUser ApplicationUser { get; set; }
 
-        public List<OrderedProductsData> Products { get; set; }
+        public List<OrderedProduct> Products { get; set; }
 
         public Order()
         {
-
         }
 
         public Order(Builder builder)
         {
             OrderId = builder.orderId;
-            UserId = builder.userId;
             DateOfOrder = builder.dateOfOrder;
-            StatusOrder = builder.statusOrder;
+            Status= builder.status;
             Price = builder.price;
             ApplicationUser = builder.applicationUser;
             Products = builder.products;
@@ -41,12 +38,11 @@ namespace ShopFilip.Models
         public class Builder
         {
             internal string orderId;
-            internal string userId;
-            internal string dateOfOrder;
-            internal string statusOrder;
-            internal string price;
+            internal DateTime dateOfOrder;
+            internal Status status;
+            internal decimal price;
             internal ApplicationUser applicationUser;
-            internal List<OrderedProductsData> products;
+            internal List<OrderedProduct> products;
 
             public Builder OrderId(string orderId)
             {
@@ -54,25 +50,19 @@ namespace ShopFilip.Models
                 return this;
             }
 
-            public Builder UserID(string userId)
-            {
-                this.userId = userId;
-                return this;
-            }
-
-            public Builder DateOfOrder(string dateOfOrder)
+            public Builder DateOfOrder(DateTime dateOfOrder)
             {
                 this.dateOfOrder = dateOfOrder;
                 return this;
             }
 
-            public Builder StatusOrder(string statusOrder)
+            public Builder Status(Status status)
             {
-                this.statusOrder = statusOrder;
+                this.status = status;
                 return this;
             }
 
-            public Builder Price(string price)
+            public Builder Price(decimal price)
             {
                 this.price = price;
                 return this;
@@ -84,7 +74,7 @@ namespace ShopFilip.Models
                 return this;
             } 
             
-            public Builder Products(List<OrderedProductsData> products)
+            public Builder Products(List<OrderedProduct> products)
             {
                 this.products = products;
                 return this;

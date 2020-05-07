@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ShopFilip.IdentityModels;
 using System;
@@ -13,9 +14,10 @@ namespace ShopFilip.Models
         public EfDbContext(DbContextOptions<EfDbContext> options) : base(options)
         {
         }
-        public DbSet<Product> ProductsData { get; set; }
-        public DbSet<ProductAtribute> ProductAtributes { get; set; }
+        public DbSet<Product> Products { get; set; }
+        public DbSet<Size> Size { get; set; }
         public DbSet<Order> Orders { get; set; }
-        public DbSet<OrderedProductsData> ProductsId { get; set; }
+        public DbSet<OrderedProduct> OrderedProducts { get; set; }
     }
 }
+ 

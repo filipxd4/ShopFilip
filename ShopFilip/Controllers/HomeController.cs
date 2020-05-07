@@ -20,7 +20,7 @@ namespace ShopFilip.Controllers
         [Route("MainPage")]
         public async Task<IActionResult> MainPage()
         {
-            return View(await _context.ProductsData.Include(c=>c.Photos).ToListAsync());
+            return View(await _context.Products.Include(c=>c.Photos).ToListAsync());
         }
     }
 }

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ShopFilip.Migrations
 {
-    public partial class FirstMigration : Migration
+    public partial class firstmigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -54,22 +54,21 @@ namespace ShopFilip.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProductsData",
+                name: "Products",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(nullable: true),
-                    Quantity = table.Column<int>(nullable: false),
-                    Price = table.Column<int>(nullable: false),
-                    Group = table.Column<string>(nullable: true),
+                    Price = table.Column<decimal>(nullable: false),
                     Table = table.Column<string>(nullable: true),
+                    Group = table.Column<int>(nullable: false),
                     Gender = table.Column<int>(nullable: false),
                     Description = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProductsData", x => x.Id);
+                    table.PrimaryKey("PK_Products", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -183,10 +182,9 @@ namespace ShopFilip.Migrations
                 columns: table => new
                 {
                     OrderId = table.Column<string>(nullable: false),
-                    UserId = table.Column<string>(nullable: true),
-                    DateOfOrder = table.Column<string>(nullable: true),
-                    StatusOrder = table.Column<string>(nullable: true),
-                    Price = table.Column<string>(nullable: true),
+                    DateOfOrder = table.Column<DateTime>(nullable: false),
+                    Status = table.Column<int>(nullable: false),
+                    Price = table.Column<decimal>(nullable: false),
                     ApplicationUserId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -201,68 +199,71 @@ namespace ShopFilip.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PhotosList",
+                name: "Photos",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Atribute = table.Column<string>(nullable: true),
-                    Value = table.Column<string>(nullable: true),
+                    PhotoPath = table.Column<string>(nullable: true),
                     ProductId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PhotosList", x => x.Id);
+                    table.PrimaryKey("PK_Photos", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PhotosList_ProductsData_ProductId",
+                        name: "FK_Photos_Products_ProductId",
                         column: x => x.ProductId,
-                        principalTable: "ProductsData",
+                        principalTable: "Products",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProductAtributes",
+                name: "Size",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Atribute = table.Column<string>(nullable: true),
-                    Value = table.Column<string>(nullable: true),
+                    SizeOfPruduct = table.Column<int>(nullable: false),
                     Quantity = table.Column<int>(nullable: false),
                     ProductId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProductAtributes", x => x.Id);
+                    table.PrimaryKey("PK_Size", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ProductAtributes_ProductsData_ProductId",
+                        name: "FK_Size_Products_ProductId",
                         column: x => x.ProductId,
-                        principalTable: "ProductsData",
+                        principalTable: "Products",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProductsId",
+                name: "OrderedProducts",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    IdOfOrder = table.Column<string>(nullable: true),
-                    IdOfProduct = table.Column<int>(nullable: false),
-                    Size = table.Column<string>(nullable: true),
+                    ProductId = table.Column<int>(nullable: true),
+                    Size = table.Column<int>(nullable: false),
                     Quantity = table.Column<int>(nullable: false),
                     OrderId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProductsId", x => x.Id);
+                    table.PrimaryKey("PK_OrderedProducts", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ProductsId_Orders_OrderId",
+                        name: "FK_OrderedProducts_Orders_OrderId",
                         column: x => x.OrderId,
                         principalTable: "Orders",
                         principalColumn: "OrderId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_OrderedProducts_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -306,24 +307,29 @@ namespace ShopFilip.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_OrderedProducts_OrderId",
+                table: "OrderedProducts",
+                column: "OrderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderedProducts_ProductId",
+                table: "OrderedProducts",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Orders_ApplicationUserId",
                 table: "Orders",
                 column: "ApplicationUserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PhotosList_ProductId",
-                table: "PhotosList",
+                name: "IX_Photos_ProductId",
+                table: "Photos",
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductAtributes_ProductId",
-                table: "ProductAtributes",
+                name: "IX_Size_ProductId",
+                table: "Size",
                 column: "ProductId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProductsId_OrderId",
-                table: "ProductsId",
-                column: "OrderId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -344,22 +350,22 @@ namespace ShopFilip.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "PhotosList");
+                name: "OrderedProducts");
 
             migrationBuilder.DropTable(
-                name: "ProductAtributes");
+                name: "Photos");
 
             migrationBuilder.DropTable(
-                name: "ProductsId");
+                name: "Size");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "ProductsData");
+                name: "Orders");
 
             migrationBuilder.DropTable(
-                name: "Orders");
+                name: "Products");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

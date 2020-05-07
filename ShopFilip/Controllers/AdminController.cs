@@ -37,7 +37,7 @@ namespace ShopFilip.Controllers
         [HttpGet]
         public async Task<IActionResult> AllProducts()
         {
-            return View(await _context.ProductsData.Include(c => c.ProductAtribute).ToListAsync());
+            return View(await _context.Products.Include(c => c.Sizes).ToListAsync());
         }
 
         [HttpGet]
@@ -45,13 +45,9 @@ namespace ShopFilip.Controllers
         {
             if (id != null)
             {
-                var product = _context.ProductsData.Include(c => c.ProductAtribute).Include(k => k.Photos).Single(x => x.Id == id);
-                return View(product);
+                return View(_context.Products.Include(c => c.Sizes).Include(k => k.Photos).Single(x => x.Id == id));
             }
-            else
-            {
-                return View();
-            }
+            return View();
         }
 
         [HttpPost]
@@ -59,29 +55,29 @@ namespace ShopFilip.Controllers
         {
             if (ModelState.IsValid)
             {
-                List<ProductAtribute> prodAtr = new List<ProductAtribute>();
+                List<Size> sizes = new List<Size>();
                 Product product = new Product();
                 var quantityWithoutNull = productToAdd.Quantity.Where(x => x != String.Empty).ToArray();
 
                 for (int i = 0; i < productToAdd.Size.Length; i++)
                 {
-                    prodAtr.Add(new ProductAtribute("prod", productToAdd.Size[i], Convert.ToInt32(quantityWithoutNull[i])));
+                    sizes.Add(new Size((SizeOfPruduct)Convert.ToInt32(productToAdd.Size[i]), Convert.ToInt32(quantityWithoutNull[i])));
                 }
 
                 product.Name = productToAdd.Name;
                 product.Price = Convert.ToInt32(productToAdd.Price);
                 product.Description = productToAdd.Description;
-                product.Gender = (Gender)(Convert.ToInt32(productToAdd.Gender));
-                product.Group = productToAdd.Group;
-                product.ProductAtribute = prodAtr;
-                List<PhotosList> photosList = new List<PhotosList>();
+                product.Gender = (Gender)Convert.ToInt32(productToAdd.Gender);
+                product.Group = (Group)Convert.ToInt32(productToAdd.Group);
+                product.Sizes = sizes;
+                List<Photos> photos= new List<Photos>();
 
                 foreach (var item in productToAdd.Photos)
                 {
-                    photosList.Add(new PhotosList("photo", item));
+                    photos.Add(new Photos(item));
                 }
 
-                product.Photos = photosList;
+                product.Photos = photos;
                 product.Table = productToAdd.Table;
                 _context.Add(product);
                 await _context.SaveChangesAsync();
@@ -102,7 +98,7 @@ namespace ShopFilip.Controllers
             }
             else
             {
-                var product = _context.ProductsData.Include(c => c.ProductAtribute).Include(k => k.Photos).Single(x => x.Id == id);
+                var product = _context.Products.Include(c => c.Sizes).Include(k => k.Photos).Single(x => x.Id == id);
                 if (product == null)
                 {
                     return NotFound();
@@ -121,26 +117,27 @@ namespace ShopFilip.Controllers
             {
                 try
                 {
-                    List<ProductAtribute> prodAtr = new List<ProductAtribute>();
-                    var result = _context.ProductsData.Include(c => c.Photos).Include(c => c.ProductAtribute).
+                    List<Size> prodAtr = new List<Size>();
+                    var result = _context.Products.Include(c => c.Photos).Include(c => c.Sizes).
                         FirstOrDefault(x => x.Id == Convert.ToInt32(productToAdd.Id));
 
                     var quantityWithoutNull = productToAdd.Quantity.Where(x => x != String.Empty).ToArray();
                     for (int i = 0; i < productToAdd.Size.Length; i++)
                     {
-                        prodAtr.Add(new ProductAtribute("product", productToAdd.Size[i], Convert.ToInt32(quantityWithoutNull[i])));
+                        prodAtr.Add(new Size((SizeOfPruduct)Convert.ToInt32(productToAdd.Size[i]), Convert.ToInt32(quantityWithoutNull[i])));
                     }
 
                     result.Name = productToAdd.Name;
                     result.Price = Convert.ToInt32(productToAdd.Price);
                     result.Description = productToAdd.Description;
                     result.Gender = (Gender)(Convert.ToInt32(productToAdd.Gender));
-                    result.Group = productToAdd.Group;
-                    result.ProductAtribute = prodAtr;
-                    List<PhotosList> photosList = new List<PhotosList>();
-                    foreach (var item in productToAdd.Photos)
+                    result.Group = (Group)Convert.ToInt32(productToAdd.Group);
+                    result.Sizes = prodAtr;
+
+                    List<Photos> photosList = new List<Photos>();
+                    foreach (var photo in productToAdd.Photos)
                     {
-                        photosList.Add(new PhotosList("photo", item));
+                        photosList.Add(new Photos(photo));
                     }
                     result.Photos = photosList;
                     result.Table = productToAdd.Table;
@@ -158,7 +155,7 @@ namespace ShopFilip.Controllers
 
         private bool ProductModelExists(int id)
         {
-            return _context.ProductsData.Any(e => e.Id == id);
+            return _context.Products.Any(e => e.Id == id);
         }
 
         public async Task<IActionResult> Delete(int? id)
@@ -168,7 +165,7 @@ namespace ShopFilip.Controllers
                 return NotFound();
             }
 
-            var productModel = await _context.ProductsData.Include(c => c.Photos).Include(c => c.ProductAtribute)
+            var productModel = await _context.Products.Include(c => c.Photos).Include(c => c.Sizes)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (productModel == null)
             {
@@ -180,9 +177,7 @@ namespace ShopFilip.Controllers
         [HttpPost, ActionName("Delete")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var productModel = await _context.ProductsData.Include(c => c.Photos).Include(c => c.ProductAtribute).FirstOrDefaultAsync(i => i.Id == id);
-
-            _context.ProductsData.Remove(productModel);
+            _context.Products.Remove(await _context.Products.Include(c => c.Photos).Include(c => c.Sizes).FirstOrDefaultAsync(i => i.Id == id));
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(AllProducts));
         }
@@ -190,51 +185,49 @@ namespace ShopFilip.Controllers
         [HttpGet]
         public IActionResult GetCustomers()
         {
-            var customers = _userManager.Users.ToList();
-            return View(customers);
+            return View(_userManager.Users.ToList());
         }
-
 
         public async Task<IActionResult> Orders()
         {
-            var orders = _context.Orders.ToList();
-            List<AllUsersProducts> allOrders = new List<AllUsersProducts>();
-            foreach (var itema in orders)
-            {
-                List<OrderProduct> orderProd = new List<OrderProduct>();
-                itema.ApplicationUser = await _userManager.FindByIdAsync(itema.UserId);
-                List<PoductQuantityAtribute> prQ = new List<PoductQuantityAtribute>();
-                List<Product> productList = new List<Product>();
-                var productsId = _context.ProductsId.Where(x => x.IdOfOrder == itema.OrderId);
-                foreach (var itemo in productsId)
-                {
-                    try
-                    {
-                        Product product = _context.ProductsData.Where(x => x.Id == itemo.IdOfProduct).Include(x => x.Photos).First();
-                        if (product != null && !productList.Contains(product))
-                        {
-                            productList.Add(product);
-                        }
-                    }
-                    catch
-                    {
+            var orders = _context.Orders.Include(c => c.ApplicationUser).ToList();
+            //List<AllUsersProducts> allOrders = new List<AllUsersProducts>();
+            //foreach (var itema in orders)
+            //{
+            //    List<OrderProduct> orderProd = new List<OrderProduct>();
+            //    itema.ApplicationUser = await _userManager.FindByIdAsync(itema.ApplicationUser.Id);
+            //    List<PoductQuantityAtribute> prQ = new List<PoductQuantityAtribute>();
+            //    List<Product> productList = new List<Product>();
+            //    var productsId = _context.ProductsId.Where(x => x.IdOfOrder == itema.OrderId);
+            //    foreach (var itemo in productsId)
+            //    {
+            //        try
+            //        {
+            //            Product product = _context.Products.Where(x => x.Id == itemo.IdOfProduct).Include(x => x.Photos).First();
+            //            if (product != null && !productList.Contains(product))
+            //            {
+            //                productList.Add(product);
+            //            }
+            //        }
+            //        catch
+            //        {
 
-                    }
+            //        }
 
-                    prQ.Add(new PoductQuantityAtribute(productList, itemo.Quantity, itemo.Size));
-                }
-                DateTime dateTime = DateTime.Parse(itema.DateOfOrder);
-                orderProd.Add(new OrderProduct(prQ, dateTime, itema.OrderId, itema.StatusOrder));
-                allOrders.Add(new AllUsersProducts(orderProd, itema.ApplicationUser, dateTime));
-            }
-            var orderedList = allOrders.OrderByDescending(x => x.OrderDate);
+            //        prQ.Add(new PoductQuantityAtribute(productList, itemo.Quantity, itemo.Size));
+            //    }
+            //    DateTime dateTime = DateTime.Parse(itema.DateOfOrder);
+            //    orderProd.Add(new OrderProduct(prQ, dateTime, itema.OrderId, itema.StatusOrder));
+            //    allOrders.Add(new AllUsersProducts(orderProd, itema.ApplicationUser, dateTime));
+            //}
+            var orderedList = orders.OrderByDescending(x => x.DateOfOrder);
             return View(orderedList);
         }
 
         public async Task<JsonResult> UpdateDataOrders(string orderId, string orderStatus)
         {
             var Order = await _context.Orders.FirstOrDefaultAsync(x => x.OrderId == orderId.Trim());
-            Order.StatusOrder = orderStatus;
+            Order.Status = (Status)Convert.ToInt32(orderStatus);
             _context.Update(Order);
             await _context.SaveChangesAsync();
             return Json(Order);
@@ -247,7 +240,7 @@ namespace ShopFilip.Controllers
             List<OrderChart> orderChart = new List<OrderChart>();
             foreach (var item in result)
             {
-                orderChart.Add(new OrderChart(DateTime.Parse(item.Date), item.SumMoney.ToString()));
+                orderChart.Add(new OrderChart(item.Date, item.SumMoney.ToString()));
             }
             orderChart = orderChart.OrderBy(x => x.Date).ToList();
             return Json(orderChart);

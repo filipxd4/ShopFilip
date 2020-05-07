@@ -8,6 +8,6 @@ namespace ShopFilip.Interfaces
 {
     public interface IOrderLogic
     {
-        Task<List<OrderProduct>> GetUserOrders(string idOfUser);
+        Task<IQueryable<Order>> GetUserOrders(string idOfUser);
     }
 }

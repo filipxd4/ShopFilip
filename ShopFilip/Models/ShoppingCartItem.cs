@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ShopFilip.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,6 +12,6 @@ namespace ShopFilip.Models
 
         public int Quantity { get; set; }
 
-        public string Size { get; set; }
+        public SizeOfPruduct Size { get; set; }
     }
 }

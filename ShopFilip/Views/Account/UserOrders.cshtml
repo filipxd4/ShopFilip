@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ShopFilip.Models.OrderProduct>
+﻿@model IEnumerable<ShopFilip.Models.Order>
 @{
     ViewData["Title"] = ViewContext.RouteData.Values["action"].ToString();
 }
@@ -30,29 +30,24 @@
                             @item.OrderId
                         </td>
                         <td>
-                            @if (item.PoductQuantityAtribute.Count() == 0 || item.PoductQuantityAtribute == null)
+                            @if (item.Products.Count() == 0 || item.Products == null)
                             {
                                 <span>Brak produktu</span>
                             }
                             else
                             {
-                                @foreach (var itemo in item.PoductQuantityAtribute)
+                                @foreach (var itemo in item.Products)
                                 {
-
-                                    foreach (var itema in itemo.Product)
-                                    {
-                                        <span>@itema.Name</span>
-                                        <span>@item.OrderStatus</span>
-                                        <span>@itemo.Quantity</span>
-                                        <img src="@itema.Photos[0].Value" width="100" />
-                                    }
-
+                                    <span>@itemo.Product.Name</span>
+                                    <span>@itemo.Quantity</span>
+                                    <span>@itemo.Size.ToString()</span>
+                                    <img src="@itemo.Product.Photos[0].PhotoPath" width="100" />
                                 }
                             }
 
                         </td>
                         <td>
-                            @item.OrderDate
+                            @item.DateOfOrder
                         </td>
                     </tr>
                 }

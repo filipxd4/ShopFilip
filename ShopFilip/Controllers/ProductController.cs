@@ -29,7 +29,7 @@ namespace OnlineShop.Controllers
         {
             if (id != 0)
             {
-                var a = _context.ProductsData.Include(c => c.ProductAtribute).Include(k => k.Photos).Single(x => x.Id == id);
+                var a = _context.Products.Include(c => c.Sizes).Include(k => k.Photos).Single(x => x.Id == id);
                 return View(a);
             }
             return View();
@@ -40,11 +40,11 @@ namespace OnlineShop.Controllers
             List<Product> ProductsData;
             if (!string.IsNullOrEmpty(genre))
             {
-                ProductsData = await _context.ProductsData.Where(m => string.Equals(m.Name, genre, StringComparison.InvariantCultureIgnoreCase)).ToListAsync();
+                ProductsData = await _context.Products.Where(m => string.Equals(m.Name, genre, StringComparison.InvariantCultureIgnoreCase)).ToListAsync();
             }
             else
             {
-                ProductsData = await _context.ProductsData.ToListAsync();
+                ProductsData = await _context.Products.ToListAsync();
             }
             if (ProductsData == null)
             {
@@ -66,13 +66,13 @@ namespace OnlineShop.Controllers
             return View();
         }
 
-        public JsonResult GetQuantityByIdAndAtr(int id, string atr)
+        public JsonResult GetQuantityByProductIdAndSize(int id, string size)
         {
-            var a = _context.ProductsData.Where(x => x.Id == id).Include(c => c.ProductAtribute).First();
+            var products = _context.Products.Where(x => x.Id == id).Include(c => c.Sizes).First();
             int quantity = 0;
-            foreach (var item in a.ProductAtribute)
+            foreach (var item in products.Sizes)
             {
-                if (item.Value == atr)
+                if ((SizeOfPruduct)item.SizeOfPruduct == (SizeOfPruduct)Convert.ToInt32(size))
                 {
                     quantity = Convert.ToInt32(item.Quantity);
                 }
@@ -88,18 +88,18 @@ namespace OnlineShop.Controllers
             bool hasAtribute = false;
             if (SearchValue == null)
             {
-                tempListOfProducts.AddRange(from product in _context.ProductsData.Include(photo => photo.Photos).Include(atr => atr.ProductAtribute)
-                              where product.Group == GroupOfProducts && product.Gender==gender
+                tempListOfProducts.AddRange(from product in _context.Products.Include(photo => photo.Photos).Include(atr => atr.Sizes)
+                              where product.Group == (Group)Convert.ToInt32(GroupOfProducts) && product.Gender==gender
                                             select product);
                 if (Sizes.Count() != 0)
                 {
                     foreach (var item in tempListOfProducts)
                     {
-                        foreach (var itemo in item.ProductAtribute)
+                        foreach (var itemo in item.Sizes)
                         {
                             foreach (var iteam in a)
                             {
-                                if (iteam == itemo.Value)
+                                if ((SizeOfPruduct)Convert.ToInt32(iteam) == itemo.SizeOfPruduct)
                                 {
                                     ProperListOfProducts.Add(item);
                                     hasAtribute = true;
@@ -124,18 +124,18 @@ namespace OnlineShop.Controllers
             }
             else
             {
-                tempListOfProducts.AddRange(from product in _context.ProductsData.Include(c => c.Photos).Include(c => c.ProductAtribute)
-                              where product.Name.ToLower().Contains(SearchValue.ToLower())&& product.Group == GroupOfProducts && product.Gender == gender
+                tempListOfProducts.AddRange(from product in _context.Products.Include(c => c.Photos).Include(c => c.Sizes)
+                              where product.Name.ToLower().Contains(SearchValue.ToLower())&& product.Group == (Group)Convert.ToInt32(GroupOfProducts) && product.Gender == gender
                                             select product);
                 if (Sizes.Count() != 0)
                 {
                     foreach (var item in tempListOfProducts)
                     {
-                        foreach (var itemo in item.ProductAtribute)
+                        foreach (var itemo in item.Sizes)
                         {
                             foreach (var iteam in a)
                             {
-                                if (iteam == itemo.Value)
+                                if ((SizeOfPruduct)Convert.ToInt32(iteam) == itemo.SizeOfPruduct)
                                 {
                                     ProperListOfProducts.Add(item);
                                     break;

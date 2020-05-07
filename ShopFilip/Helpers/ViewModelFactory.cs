@@ -18,8 +18,7 @@ namespace ShopFilip.Helpers
                 Table= model.Table,
                 Gender = model.Gender,
                 Description = model.Description,
-                Quantity=model.Quantity,
-                ProductAtribute=model.ProductAtribute,
+                Sizes=model.Sizes,
             };
             return viewModel;
         }
@@ -48,15 +47,6 @@ namespace ShopFilip.Helpers
                 Description = viewModel.Description,
             };
             return model;
-        }
-
-        public static UsersViewModel MapUsersToViewModel(IEnumerable<ApplicationUser> users)
-        {
-            UsersViewModel viewModel = new UsersViewModel()
-            {
-                Name = users.First().UserName,
-            };
-            return viewModel;
         }
     }
 }

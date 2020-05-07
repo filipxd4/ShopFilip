@@ -3,6 +3,7 @@
     ViewData["Title"] = ViewContext.RouteData.Values["action"].ToString();
 }
 @model IEnumerable<ShopFilip.Models.AllUsersProducts>
+@using ShopFilip.Helpers;
 <div class="container">
     <table class="table table-striped table-sm">
         <thead>
@@ -26,65 +27,55 @@
                         </td>
                         <td>
                             <select name="example" class="status" id="combobox">
-                                @if (itemo.OrderStatus == "Paid")
+                                @if (itemo.Status == Status.Paid)
                                 {
-                                    <option selected="selected" value="@itemo.OrderStatus">@itemo.OrderStatus</option>
+                                    <option selected="selected" value="@itemo.Status">@itemo.Status.ToString()</option>
                                     <option value="SUCCESS">SUCCESS</option>
                                     <option value="Sent">Sent</option>
                                     <option value="Cancel">Cancel</option>
                                 }
-                                else if (itemo.OrderStatus == "SUCCESS")
+                                else if (itemo.Status == Status.Paid)
                                 {
-                                    <option selected="selected" value="@itemo.OrderStatus">@itemo.OrderStatus</option>
+                                    <option selected="selected" value="@itemo.Status">@itemo.Status.ToString()</option>
                                     <option value="Paid">Paid</option>
                                     <option value="Sent">Sent</option>
                                     <option value="Cancel">Cancel</option>
                                 }
-                                else if (itemo.OrderStatus == "Sent")
+                                else if (itemo.Status == Status.Paid)
                                 {
-                                    <option selected="selected" value="@itemo.OrderStatus">@itemo.OrderStatus</option>
+                                    <option selected="selected" value="@itemo.Status">@itemo.Status.ToString()</option>
                                     <option value="SUCCESS">SUCCESS</option>
                                     <option value="Paid">Paid</option>
                                     <option value="Cancel">Cancel</option>
                                 }
-                                else if (itemo.OrderStatus == "Cancel")
+                                else if (itemo.Status == Status.Paid)
                                 {
-                                    <option selected="selected" value="@itemo.OrderStatus">@itemo.OrderStatus</option>
-                                    <option value="SUCCESS">SUCCESS</option>
-                                    <option value="Sent">Sent</option>
-                                    <option value="Paid">Paid</option>
-                                }
-                                else if (itemo.OrderStatus == "Cancel")
-                                {
-                                    <option selected="selected" value="@itemo.OrderStatus">@itemo.OrderStatus</option>
+                                    <option selected="selected" value="@itemo.Status">@itemo.Status.ToString()</option>
                                     <option value="SUCCESS">SUCCESS</option>
                                     <option value="Sent">Sent</option>
                                     <option value="Paid">Paid</option>
                                 }
                             </select>
 
-                            @foreach (var itema in itemo.PoductQuantityAtribute)
+                            @if (itemo.Products.Count() == 0 || itemo.Products == null)
                             {
-                                @if (itema.Product.Count() == 0 || itema.Product == null)
-                                {
-                                    <br /><span><b>Produkt: </b>Produkt już niedostępny</span><br />
+                                <br /><span><b>Produkt: </b>Produkt już niedostępny</span><br />
 
-                                }
-                                else
+                            }
+                            else
+                            {
+                                @foreach (var itema in itemo.Products)
                                 {
-                                    foreach (var product in itema.Product)
-                                    {
-                                        <br /><span><b>Produkt: </b>@product.Name </span><br />
-                                        <span><b>Ilość: </b>@itema.Quantity </span><img src="@product.Photos[0].Value" width="100" /><br>
-                                        <span><b>Kwota: </b>@product.Price zł</span><br>
-                                    }
+                                    <br /><span><b>Produkt: </b>@itema.Product.Name </span><br />
+                                    <span><b>Ilość: </b>@itema.Quantity </span><img src="@itema.Product.Photos[0].PhotoPath" width="100" /><br>
+                                    <span><b>Kwota: </b>@itema.Product.Price zł</span><br>
                                 }
                             }
                         </td>
+                        <td>
+                            @itemo.DateOfOrder
+                        </td>
                     }
-                    <td>
-                        @item.OrderDate
-                    </td>
                 </tr>
             }
         </tbody>
