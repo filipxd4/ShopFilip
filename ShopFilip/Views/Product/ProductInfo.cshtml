@@ -86,7 +86,6 @@
         btnUp.click(function() {
             let max = $("#quantity").attr('max');
             var oldValue = parseFloat(input.val());
-            console.log(max)
 
             if (oldValue >= max) {
                 var newVal = oldValue;
@@ -118,10 +117,8 @@
             size: atrb
         }, function(response) {
             $('#quantity').attr('max', response);
-            console.log($('#quantity').attr('max'))
 
-            if (response == 0) {
-                console.log($("#product-availability").text)
+            if (response <= 0) {
                 $("#product-availability").html('<i class="material-icons product-unavailable"></i> Brak w magazynie')
                 $('.buyButton').prop("disabled", true);
                 $('#quantity').prop("disabled", true);
@@ -149,12 +146,16 @@
                 size: atr
             },
             traditional: true,
-            success: function(response) {
-                if (response == 0) {
+            success: function (response) {
+                if (response <= 0) {
+                    $("#product-availability").html('<i class="material-icons product-unavailable"></i> Brak w magazynie')
                     $('.buyButton').prop("disabled", true);
                     $('#quantity').prop("disabled", true);
                 }
                 $("#quantity").attr('max', response);
+            },
+            error: function (response) {
+               
             }
         });
     });

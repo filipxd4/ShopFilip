@@ -1,4 +1,5 @@
-﻿$("#submit-form").click(function () {
+﻿var a = document.getElementById("submit-form")
+$(a).click(function () {
     let group = $("input[name='group']:checked").val();
     let gender = $("input[name='gender']:checked").val();
     let size = $("input[name='size']:checked").map(function () { return $(this).val(); }).get();
@@ -33,6 +34,9 @@
             if (response.success) {
                 $('#modal-set-center').modal('show');
             }
+        },
+        error: function (response) {
+            console.log("error")
         },
     });
 });

@@ -11,6 +11,6 @@ namespace ShopFilip.Interfaces
     {
         Task<string> GetStatusOfOrderAsync(string orderId);
         Task<string> GetAccessTokenAsync();
-        Task<string> GeneratePayLink(ApplicationUser user, int price, List<ShoppingCartItem> itemfromCart, string ip, string accessToken);
+        Task<string> GeneratePayLink(ApplicationUser user, decimal price, List<ShoppingCartItem> itemfromCart, string ip, string accessToken);
     }
 }

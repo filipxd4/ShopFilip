@@ -55,13 +55,13 @@ namespace OnlineShop.Controllers
         }
 
         [Route("MenMainPage/{id}")]
-        public IActionResult MenMainPage(int? pageNumber, string id)
+        public IActionResult MenMainPage()
         {
             return View();
         }
 
         [Route("WomanMainPage/{id}")]
-        public IActionResult WomanMainPage(int? pageNumber, string id)
+        public IActionResult WomanMainPage()
         {
             return View();
         }
@@ -72,7 +72,7 @@ namespace OnlineShop.Controllers
             int quantity = 0;
             foreach (var item in products.Sizes)
             {
-                if ((SizeOfPruduct)item.SizeOfPruduct == (SizeOfPruduct)Convert.ToInt32(size))
+                if (item.SizeOfPruduct.ToString() == size)
                 {
                     quantity = Convert.ToInt32(item.Quantity);
                 }
@@ -89,7 +89,7 @@ namespace OnlineShop.Controllers
             if (SearchValue == null)
             {
                 tempListOfProducts.AddRange(from product in _context.Products.Include(photo => photo.Photos).Include(atr => atr.Sizes)
-                              where product.Group == (Group)Convert.ToInt32(GroupOfProducts) && product.Gender==gender
+                              where product.Group == (Group)Enum.Parse(typeof(Group), GroupOfProducts) && product.Gender== (Gender)Convert.ToInt32(gender)
                                             select product);
                 if (Sizes.Count() != 0)
                 {
@@ -125,7 +125,7 @@ namespace OnlineShop.Controllers
             else
             {
                 tempListOfProducts.AddRange(from product in _context.Products.Include(c => c.Photos).Include(c => c.Sizes)
-                              where product.Name.ToLower().Contains(SearchValue.ToLower())&& product.Group == (Group)Convert.ToInt32(GroupOfProducts) && product.Gender == gender
+                              where product.Name.ToLower().Contains(SearchValue.ToLower())&& product.Group == (Group)Enum.Parse(typeof(Group), GroupOfProducts) && product.Gender == gender
                                             select product);
                 if (Sizes.Count() != 0)
                 {

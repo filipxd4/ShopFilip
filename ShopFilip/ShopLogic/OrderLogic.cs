@@ -29,19 +29,18 @@ namespace ShopFilip.ShopLogic
 
         public async Task<IQueryable<Order>> GetUserOrders(string idOfUser)
         {
-            var aaa = await _userManager.FindByIdAsync(idOfUser);
-            var orders = _context.Orders.Where(x => x.ApplicationUser.Id == idOfUser).Include(c => c.Products);
+            var orders = _context.Orders.Where(x => x.ApplicationUser.Id == idOfUser).Include(c => c.Products).ThenInclude(d=>d.Product).ThenInclude(e=>e.Photos);
             foreach (var item in orders)
             {
                 string status = await _payULogic.GetStatusOfOrderAsync(item.OrderId);
                 if (item.Status == Helpers.Status.New && status == "SUCCESS")
                 {
                     item.Status = Helpers.Status.Paid;
-                    await _userManager.UpdateAsync(aaa);
+                    _context.Update(orders);
                 }
             }
             var sortedOrderList = orders.OrderByDescending(x => x.DateOfOrder);
-            return orders;
+            return sortedOrderList;
         }
     }
 }

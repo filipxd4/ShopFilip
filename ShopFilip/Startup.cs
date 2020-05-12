@@ -60,6 +60,7 @@ namespace ShopFilip
             else
             {
                 app.UseExceptionHandler("/Home/Error");
+                app.UseStaticFiles();
                 app.UseHsts();
             }
 

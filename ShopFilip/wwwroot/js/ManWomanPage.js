@@ -27,15 +27,15 @@ function GetPageData(pageNum, pageSize) {
 
         let url = document.location.href;
         let groupOfProducts = url.split("/")[4]
-        console.log(groupOfProducts)
         $.ajax({
             url: '/Product/GetPaggedData',
             data: { SearchValue: searchValue, Sizes: sizes, GroupOfProducts: groupOfProducts, gender, pageNumber: pageNum, pageSize: pageSize },
             traditional: true,
             success: function (response) {
+                console.log(response)
                 let rowData = "";
                 for (var i = 0; i < response.data.length; i++) {
-                    rowData = rowData + '<div class="col-md-4"> <div class="card rounded"> <div class="card-image" > <img class="lazy-img img-fluid" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="' + response.data[i].photos[0].value + '" alt="" /> </div> <div class="card-image-overlay m-auto"> <span class="card-detail-badge">' + response.data[i].price + ' zł</span> </div> <div class="card-body text-center"> <div class="ad-title m-auto"> <h5>' + response.data[i].name + '</h5> </div> <a href="@Url.Action("ProductInfo", "Product", new { id= "-siemasiema" })" class="btn buy">KUP TERAZ</a> </div> </div></div>';
+                    rowData = rowData + '<div class="col-md-4"> <div class="card rounded"> <div class="card-image" > <img class="lazy-img img-fluid" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-src="' + response.data[i].photos[0].photoPath + '" alt="" /> </div> <div class="card-image-overlay m-auto"> <span class="card-detail-badge">' + response.data[i].price + ' zł</span> </div> <div class="card-body text-center"> <div class="ad-title m-auto"> <h5>' + response.data[i].name + '</h5> </div> <a href="/product/productInfo/' + response.data[i].id+'" class="btn buy">KUP TERAZ</a> </div> </div></div>';
                     rowData = rowData.replace("-siemasiema", response.data[i].id);
                 }
                 $("#products").append(rowData).fadeIn(400);

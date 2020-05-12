@@ -128,9 +128,9 @@ namespace ShopFilip.Controllers
                     }
 
                     result.Name = productToAdd.Name;
-                    result.Price = Convert.ToInt32(productToAdd.Price);
+                    result.Price = Convert.ToDecimal(productToAdd.Price);
                     result.Description = productToAdd.Description;
-                    result.Gender = (Gender)(Convert.ToInt32(productToAdd.Gender));
+                    result.Gender = (Gender)Enum.Parse(typeof(Gender), productToAdd.Gender);
                     result.Group = (Group)Convert.ToInt32(productToAdd.Group);
                     result.Sizes = prodAtr;
 
@@ -188,38 +188,9 @@ namespace ShopFilip.Controllers
             return View(_userManager.Users.ToList());
         }
 
-        public async Task<IActionResult> Orders()
+        public IActionResult Orders()
         {
-            var orders = _context.Orders.Include(c => c.ApplicationUser).ToList();
-            //List<AllUsersProducts> allOrders = new List<AllUsersProducts>();
-            //foreach (var itema in orders)
-            //{
-            //    List<OrderProduct> orderProd = new List<OrderProduct>();
-            //    itema.ApplicationUser = await _userManager.FindByIdAsync(itema.ApplicationUser.Id);
-            //    List<PoductQuantityAtribute> prQ = new List<PoductQuantityAtribute>();
-            //    List<Product> productList = new List<Product>();
-            //    var productsId = _context.ProductsId.Where(x => x.IdOfOrder == itema.OrderId);
-            //    foreach (var itemo in productsId)
-            //    {
-            //        try
-            //        {
-            //            Product product = _context.Products.Where(x => x.Id == itemo.IdOfProduct).Include(x => x.Photos).First();
-            //            if (product != null && !productList.Contains(product))
-            //            {
-            //                productList.Add(product);
-            //            }
-            //        }
-            //        catch
-            //        {
-
-            //        }
-
-            //        prQ.Add(new PoductQuantityAtribute(productList, itemo.Quantity, itemo.Size));
-            //    }
-            //    DateTime dateTime = DateTime.Parse(itema.DateOfOrder);
-            //    orderProd.Add(new OrderProduct(prQ, dateTime, itema.OrderId, itema.StatusOrder));
-            //    allOrders.Add(new AllUsersProducts(orderProd, itema.ApplicationUser, dateTime));
-            //}
+            var orders = _context.Orders.Include(c => c.ApplicationUser).Include(c=>c.Products).ThenInclude(d => d.Product).ThenInclude(e => e.Photos).ToList();
             var orderedList = orders.OrderByDescending(x => x.DateOfOrder);
             return View(orderedList);
         }

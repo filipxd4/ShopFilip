@@ -197,7 +197,7 @@ body {
 }
 
 .card-image {
-    max-height: 380px;
+    height: 380px;
     overflow: hidden;
 }
 

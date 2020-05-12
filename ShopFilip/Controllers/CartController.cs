@@ -48,13 +48,13 @@ namespace OnlineShop.Controllers
         }
 
         [Route("buy/{id}")]
-        public async Task<IActionResult> Buy(int id, string size, int number)
+        public IActionResult Buy(int id, string size, int number)
         {
             if (SesionHelper.GetObjectFromJson<List<ShoppingCartItem>>(HttpContext.Session, "cart") == null)
             {
                 var productModel = _context.Products.Where(x=>x.Id==id).Include(x=>x.Photos).First();
                 List<ShoppingCartItem> cart = new List<ShoppingCartItem>();
-                cart.Add(new ShoppingCartItem { Product = productModel, Quantity = number, Size=(SizeOfPruduct)Convert.ToInt32(size)});
+                cart.Add(new ShoppingCartItem { Product = productModel, Quantity = number, Size= (SizeOfPruduct)Enum.Parse(typeof(SizeOfPruduct), size)});
                 SesionHelper.SetObjectAsJson(HttpContext.Session, "cart", cart);
             }
             else
@@ -68,7 +68,7 @@ namespace OnlineShop.Controllers
                 else
                 {
                     var productModel = _context.Products.Where(x => x.Id == id).Include(x => x.Photos).First();
-                    cart.Add(new ShoppingCartItem { Product = productModel, Quantity = number, Size = (SizeOfPruduct)Convert.ToInt32(size)});
+                    cart.Add(new ShoppingCartItem { Product = productModel, Quantity = number, Size = (SizeOfPruduct)Enum.Parse(typeof(SizeOfPruduct), size) });
                 }
                 SesionHelper.SetObjectAsJson(HttpContext.Session, "cart", cart);
             }
@@ -107,7 +107,7 @@ namespace OnlineShop.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> MakeOrder(int price, string Ip,string returnurl="")
+        public async Task<IActionResult> MakeOrder(decimal price, string Ip,string returnurl="")
         {
             var usaer = await GetCurrentUserAsync();
             var useraId = usaer?.Id;

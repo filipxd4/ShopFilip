@@ -52,9 +52,9 @@ namespace ShopFilip.ShopLogic
             }
         }
 
-        public async Task<string> GeneratePayLink(ApplicationUser user, int price, List<ShoppingCartItem> itemfromCart, string ip, string accessToken)
+        public async Task<string> GeneratePayLink(ApplicationUser user, decimal price, List<ShoppingCartItem> itemfromCart, string ip, string accessToken)
         {
-            string ProperPrice = (price * 100).ToString();
+            string ProperPrice = (Convert.ToInt32(price*100)).ToString();
             var handler = new HttpClientHandler()
             {
                 AllowAutoRedirect = false
@@ -78,7 +78,7 @@ namespace ShopFilip.ShopLogic
                         "\n}," +
                         "\n\"products\": [\n";
                     if (itemfromCart.Count() == 1)
-                        stringToPayU += "{\n\"name\": \"" + itemfromCart.First().Product.Name + "\",\n\"unitPrice\": \"" + itemfromCart.First().Product.Price + "\",\n \"quantity\": \"" + itemfromCart.First().Quantity + "\"\n}\n";
+                        stringToPayU += "{\n\"name\": \"" + itemfromCart.First().Product.Name + "\",\n\"unitPrice\":\"" + (Convert.ToInt32(price * 100)).ToString() + "\",\n \"quantity\": \"" + itemfromCart.First().Quantity + "\"\n}\n";
                     else
                         for (int i = 0; i < itemfromCart.Count(); i++)
                         {

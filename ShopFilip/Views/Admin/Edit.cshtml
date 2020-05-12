@@ -3,8 +3,6 @@
 @section CssLinks {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/fotorama/4.6.4/fotorama.css" rel="stylesheet">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
     <link rel="stylesheet" type="text/css" href="~/css/Add-edit-product.css">
 }
 @{
@@ -192,7 +190,7 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label asp-for="Description" class="control-label">Opis:</label>
-                    <textarea asp-for="Description" id="description comment" class="form-control" rows="5" ></textarea>
+                    <textarea asp-for="Description" id="description" class="form-control" rows="5"></textarea>
                     <span asp-validation-for="Description" class="text-danger"></span>
                 </div>
 
@@ -257,6 +255,7 @@
     </div>
 </div>
 @section Scripts {
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
     <script src="~/js/CustomJavaScripts.js"></script>
     <script src="~/js/AddEditProduct.js"></script>

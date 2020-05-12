@@ -10,6 +10,8 @@
     let photos = $("img[name='photo-of-product']").map(function () { return $(this).attr("src"); }).get()
     let id = $("#idOfProoduct").val();
 
+    console.log("aa")
+
     var myData = {
         Id: id,
         Name: name,
