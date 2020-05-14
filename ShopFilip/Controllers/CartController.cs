@@ -52,8 +52,8 @@ namespace OnlineShop.Controllers
         {
             if (SesionHelper.GetObjectFromJson<List<ShoppingCartItem>>(HttpContext.Session, "cart") == null)
             {
-                var productModel = _context.Products.Where(x=>x.Id==id).Include(x=>x.Photos).First();
                 List<ShoppingCartItem> cart = new List<ShoppingCartItem>();
+                var productModel = _context.Products.Where(x=>x.Id==id).Include(x=>x.Photos).First();
                 cart.Add(new ShoppingCartItem { Product = productModel, Quantity = number, Size= (SizeOfPruduct)Enum.Parse(typeof(SizeOfPruduct), size)});
                 SesionHelper.SetObjectAsJson(HttpContext.Session, "cart", cart);
             }
@@ -109,14 +109,14 @@ namespace OnlineShop.Controllers
         [Authorize]
         public async Task<IActionResult> MakeOrder(decimal price, string Ip,string returnurl="")
         {
-            var usaer = await GetCurrentUserAsync();
-            var useraId = usaer?.Id;
             if (returnurl=="")
             {
+                var user = await GetCurrentUserAsync();
+                var userId = user?.Id;
                 List<ShoppingCartItem> cartItems = SesionHelper.GetObjectFromJson<List<ShoppingCartItem>>(HttpContext.Session, "cart");
-                var user= await _context.Users.FindAsync(useraId);
+                var userAccount= await _context.Users.FindAsync(userId);
                 var accessToken = await _payULogic.GetAccessTokenAsync();
-                var payUResponse = await _payULogic.GeneratePayLink(user, price, cartItems, Ip, accessToken);
+                var payUResponse = await _payULogic.GeneratePayLink(userAccount, price, cartItems, Ip, accessToken);
                 var jsonPayU = JsonConvert.DeserializeObject<StatusModel>(payUResponse);
                 var orderId = jsonPayU.orderId;
                 var uri = jsonPayU.redirectUri;

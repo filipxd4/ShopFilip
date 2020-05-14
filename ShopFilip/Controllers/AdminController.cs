@@ -233,7 +233,6 @@ namespace ShopFilip.Controllers
 
             string fullPath = uploadPath + fileName;
             imagePath = imagePath + @"\";
-            var filePath = Path.Combine(imagePath, fileName);
 
             using (var fileStream = new FileStream(fullPath, FileMode.Create))
             {
