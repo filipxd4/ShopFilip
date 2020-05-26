@@ -35,25 +35,6 @@ namespace OnlineShop.Controllers
             return View();
         }
 
-        public async Task<IActionResult> Show(string genre)
-        {
-            List<Product> ProductsData;
-            if (!string.IsNullOrEmpty(genre))
-            {
-                ProductsData = await _context.Products.Where(m => string.Equals(m.Name, genre, StringComparison.InvariantCultureIgnoreCase)).ToListAsync();
-            }
-            else
-            {
-                ProductsData = await _context.Products.ToListAsync();
-            }
-            if (ProductsData == null)
-            {
-                return NotFound();
-            }
-            ViewData["Genre"] = genre;
-            return View(ProductsData);
-        }
-
         [Route("MenMainPage/{id}")]
         public IActionResult MenMainPage()
         {

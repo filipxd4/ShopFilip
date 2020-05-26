@@ -57,14 +57,6 @@ namespace ShopFilip.Controllers
             return View();
         }
 
-        public IActionResult MainPage()
-        {
-            if (User.IsInRole("Admin"))
-                return RedirectToAction("Index", "Admin");
-            else
-                return RedirectToAction("MainPage", "Home");
-        }
-
         public IActionResult ErrorPage()
         {
             return View();
@@ -122,7 +114,7 @@ namespace ShopFilip.Controllers
                     }
                 }
             }
-            ModelState.AddModelError("", "Zły login lub hasło");
+            ModelState.AddModelError("", "Zły login lub hasło.");
             return View(model);
         }
 
@@ -136,8 +128,8 @@ namespace ShopFilip.Controllers
         [Authorize]
         public async Task<IActionResult> ManageAccount()
         {
-            var usaer = await GetCurrentUserAsync();
-            var useraId = usaer?.Id;
+            var user = await GetCurrentUserAsync();
+            var userAccount = user?.Id;
             bool isAuthenticated = User.Identity.IsAuthenticated;
             if (isAuthenticated)
             {
@@ -146,8 +138,7 @@ namespace ShopFilip.Controllers
                 else
                     ViewBag.Role = "User";
                 
-                var user = await _userManager.FindByIdAsync(useraId);
-                return View(user);
+                return View(await _userManager.FindByIdAsync(userAccount));
             }
             else
             {
@@ -159,13 +150,13 @@ namespace ShopFilip.Controllers
         [Authorize]
         public async Task<IActionResult> Edit()
         {
-            var usaer = await GetCurrentUserAsync();
-            var useraId = usaer?.Id;
-            if (useraId == null)
+            var user = await GetCurrentUserAsync();
+            var userId = user?.Id;
+            if (userId == null)
                 return ErrorPage();
 
-            var user = await _context.Users.FindAsync(useraId);
-            if (user == null)
+            var userAccount = await _context.Users.FindAsync(userId);
+            if (userAccount == null)
                 return ErrorPage();
             return View(user);
         }

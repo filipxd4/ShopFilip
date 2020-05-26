@@ -85,26 +85,6 @@ namespace OnlineShop.Controllers
             return RedirectToAction("Index");
         }
 
-        private int ifExist(int id,string size=null)
-        {
-            List<ShoppingCartItem> cart = SesionHelper.GetObjectFromJson<List<ShoppingCartItem>>(HttpContext.Session, "cart");
-            for (int i = 0; i < cart.Count; i++)
-            {
-                if (size != null)
-                {
-                    if (cart[i].Size.Equals(size) && cart[i].Product.Id.Equals(id))
-                    {
-                        return i;
-                    }
-                }
-                else if(cart[i].Product.Id.Equals(id))
-                {
-                    return i;
-                }
-            }
-            return -1;
-        }
-
         [HttpGet]
         [Authorize]
         public async Task<IActionResult> MakeOrder(decimal price, string Ip,string returnurl="")
@@ -135,14 +115,34 @@ namespace OnlineShop.Controllers
             return View();
         }
 
+        private int ifExist(int id, string size = null)
+        {
+            List<ShoppingCartItem> cart = SesionHelper.GetObjectFromJson<List<ShoppingCartItem>>(HttpContext.Session, "cart");
+            for (int i = 0; i < cart.Count; i++)
+            {
+                if (size != null)
+                {
+                    if (cart[i].Size.Equals(size) && cart[i].Product.Id.Equals(id))
+                    {
+                        return i;
+                    }
+                }
+                else if (cart[i].Product.Id.Equals(id))
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
         private async Task SaveOrderToDatabase(string orderId, List<ShoppingCartItem> listOfProducts, ApplicationUser user,decimal price)
         {
             List<OrderedProduct> orderedProducts = new List<OrderedProduct>();
             foreach (var item in listOfProducts)
             {
                 var product = _context.Products.Where(x => x.Id == item.Product.Id).Include(c => c.Sizes).First();
-
                 OrderedProduct orderedProduct = new OrderedProduct(product,(SizeOfPruduct)Convert.ToInt32(item.Size), item.Quantity);
+
                 foreach (var itema in product.Sizes)
                 {
                     if (itema.SizeOfPruduct==item.Size)

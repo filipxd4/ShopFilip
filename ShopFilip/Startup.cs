@@ -52,14 +52,14 @@ namespace ShopFilip
         {
             if (env.IsDevelopment())
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Account/Error");
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
                 app.UseStaticFiles();
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Account/Error");
                 app.UseStaticFiles();
                 app.UseHsts();
             }
@@ -74,7 +74,7 @@ namespace ShopFilip
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Account}/{action=MainPage}/{id?}");
+                    template: "{controller=Home}/{action=MainPage}/{id?}");
             });
             AdminData.Initialize(context, userManager, roleManager).Wait();
             ProductsData.Initialize(context).Wait();
